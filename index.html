@@ -199,26 +199,15 @@
     .details-genre { background: rgba(138,43,226,0.25); color: var(--accent-glow); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; display: inline-block; margin-bottom: 8px; }
     .details-desc { font-size: 13px; font-weight: bold; color: #ddd; line-height: 1.5; margin-bottom: 12px; }
     .rating-box { font-size: 13px; font-weight: bold; color: #f1c40f; margin-bottom: 12px; }
-    .star-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 2px; }
-
-    .chapters-section { margin-top: 25px; }
-    .chapters-title { font-size: 17px; font-weight: bold; color: var(--accent-glow); margin-bottom: 12px; border-bottom: 3px solid var(--accent); padding-bottom: 4px; display: inline-block; }
-    .chapters-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    @media(min-width: 600px) { .chapters-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); } }
-    .chapter-card {
-      background: var(--card-bg); border: 2px solid var(--border-color); color: #fff;
-      padding: 10px 6px; text-align: center; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; transition: 0.2s;
-    }
-    .chapter-card:hover { background: var(--accent); border-color: var(--accent-glow); }
 
     .admin-floating-btn {
       position: fixed; bottom: 75px; right: 15px; width: 45px; height: 45px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-glow)); color: #fff; display: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-glow)); color: #fff; display: flex;
       align-items: center; justify-content: center; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); z-index: 999;
     }
     .admin-chat-floating-btn {
       position: fixed; bottom: 75px; left: 15px; width: 45px; height: 45px; border-radius: 50%;
-      background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; display: none;
+      background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; display: flex;
       align-items: center; justify-content: center; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); z-index: 999; text-decoration: none;
     }
     #backToTop {
@@ -263,7 +252,7 @@
 
     <div id="notificationsModal" class="notifications-modal">
       <h4 style="color:var(--accent-glow); margin:0 0 8px 0; font-size:13px; border-bottom:2px solid var(--accent); padding-bottom:4px;">التنبيهات الفورية 🔔</h4>
-      <div class="notification-item">✨ تم تحديث بيانات الأدمن وتصحيح التصنيفات بنجاح!</div>
+      <div class="notification-item">✨ تم تفعيل الحفظ السحابي أونلاين بنجاح!</div>
     </div>
 
     <div id="profileModal" class="profile-modal">
@@ -272,11 +261,10 @@
       <input type="text" id="profileNameInput" placeholder="الاسم الشخصي">
       <input type="text" id="profileAvatarInput" placeholder="رابط صورة الآفاتار">
       <textarea id="profileBioInput" placeholder="اكتب وصف قصير (Bio)..."></textarea>
-      <button onclick="saveUserProfile()">حفظ البيانات</button>
+      <button onclick="saveUserProfile()" class="btn">حفظ البيانات</button>
       
       <div style="display:flex; gap:5px; margin-top:8px;">
-        <button onclick="exportBackup()" style="background:#00f2fe; color:#000; border:none; padding:5px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:50%;">تصدير 💾</button>
-        <button onclick="logoutUser()" style="background: #ff4d4d; border:none; padding:5px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:50%;">خروج 🚪</button>
+        <button onclick="logoutUser()" style="background: #ff4d4d; border:none; padding:5px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:100%;">خروج 🚪</button>
       </div>
     </div>
   </header>
@@ -284,7 +272,6 @@
   <div id="mySideMenu" class="side-drawer">
     <button class="close-btn" onclick="toggleNavMenu()">&times;</button>
     <a href="#" onclick="toggleNavMenu(); goHome();">🏠 الرئيسية</a>
-    <a href="#" onclick="toggleNavMenu(); scrollToFavorites();">⭐ المفضلة</a>
     <a href="login.html">🔐 لوحة التحكم / دخول</a>
   </div>
 
@@ -294,21 +281,21 @@
 
   <div id="adminModalOverlay" class="admin-modal-overlay">
     <div class="admin-modal-content">
-      <h3 id="adminModalTitle" style="color: var(--accent-glow); margin-top:0; font-size:16px;">🔒 لوحة الأدمن: إضافة مانهوا</h3>
+      <h3 id="adminModalTitle" style="color: var(--accent-glow); margin-top:0; font-size:16px;">🔒 لوحة الأدمن: إدارة المانهوا</h3>
       <input type="hidden" id="editManhwaId" value="">
       <input type="text" id="newTitle" placeholder="اسم المانهوا">
       <input type="text" id="newCover" placeholder="رابط صورة الغلاف">
       <textarea id="newDesc" placeholder="قصة أو وصف المانهوا..." style="height: 50px;"></textarea>
       
       <label style="font-size:11px; font-weight:bold; color:var(--text-muted);">اختر التصنيف:</label>
-      <select id="newGenreSelect"></select>
+      <select id="newGenreSelect">
+        <option value="أكشن">أكشن</option>
+        <option value="فانتزيا">فانتزيا</option>
+        <option value="مغامرات">مغامرات</option>
+        <option value="دراما">دراما</option>
+      </select>
 
-      <div style="display: flex; gap: 5px; margin-bottom: 10px;">
-        <input type="text" id="customGenreInput" placeholder="أو أضف تصنيف جديد..." style="margin-bottom:0;">
-        <button onclick="addNewGenre()" class="btn" style="width: 80px;">إضافة</button>
-      </div>
-
-      <button id="adminSaveBtn" onclick="saveManhwaData()" class="btn" style="margin-bottom: 6px; font-size:13px; padding:9px;">إضافة المانهوا للموقع</button>
+      <button id="adminSaveBtn" onclick="saveManhwaData()" class="btn" style="margin-top: 10px; margin-bottom: 6px; font-size:13px; padding:9px;">حفظ المانهوا بالسحابة ☁️</button>
       <button onclick="closeAdminModal()" class="btn" style="background: #444; font-size:12px;">إلغاء</button>
     </div>
   </div>
@@ -317,596 +304,233 @@
     <div class="hero-slider" id="heroSlider"></div>
 
     <div class="container">
-      <div id="continueReadingBar" style="display:none;" class="continue-reading-bar">
-        <div>
-          <span style="font-size: 11px; font-weight: bold; color: var(--text-muted); display: block;">أكمل القراءة من حيث توقفت:</span>
-          <strong id="lastReadTitle" style="color: var(--accent-glow); font-size: 13px;">اسم المانهوا</strong>
-        </div>
-        <a id="lastReadBtn" href="#" class="btn" style="width: auto; padding: 5px 12px; font-size: 11px;">متابعة 🚀</a>
-      </div>
-
       <div class="genres-container" id="genresContainer"></div>
 
       <div class="top-actions-bar">
-        <input type="text" id="searchInput" class="search-box" placeholder="ابحث بذكاء عن أي مانهوا..." oninput="filterManhwas()">
+        <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن أي مانهوا..." oninput="filterManhwas()">
         <button class="random-btn" onclick="openRandomManhwa()" title="عمل عشوائي">🎲 عشوائي</button>
       </div>
 
-      <div id="favoritesSection" style="display:none;">
-        <div class="section-title">⭐ المفضلة لديك</div>
-        <div class="grid" id="favoritesGrid"></div>
-      </div>
-
       <div class="section-title">📚 جميع المانهوات المتاحة</div>
-      <div class="grid" id="manhwasGrid"></div>
+      <div class="grid" id="manhwaGrid"></div>
     </div>
   </div>
 
-  <div id="detailsView" class="container"></div>
+  <div id="detailsView" class="container">
+    <button onclick="goHome()" class="btn" style="width: auto; margin-bottom: 15px; display: inline-block;">⬅ العودة للرئيسية</button>
+    <div class="details-hero">
+      <img id="detailImg" class="details-img" src="" alt="Cover">
+      <div class="details-info">
+        <div id="detailTitle" class="details-title"></div>
+        <div id="detailGenre" class="details-genre"></div>
+        <div id="detailDesc" class="details-desc"></div>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    const userProfile = JSON.parse(localStorage.getItem('userProfile') || 'null');
-    
-    // قائمة الأدمن المعتمدين بأساميهم
-    const adminUsernames = ['admin', 'yhya', 'Andrew'];
-    
-    const isAdmin = localStorage.getItem('isLoggedIn') === 'true' && userProfile && (
-      adminUsernames.includes(userProfile.username) || 
-      adminUsernames.includes(userProfile.name)
-    );
+  <!-- تضمين مكتبات Firebase السحابية -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    let currentGenreFilter = 'الكل';
-
-    window.onload = function() {
-      initTheme();
-      setupAuthUI();
-      loadDefaultDataIfNeeded();
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const detailId = urlParams.get('id');
-
-      if (detailId) {
-        showDetailsView(parseInt(detailId));
-      } else {
-        goHome();
-      }
+    // إعدادات الفايربيس الخادمة لمشروعك
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
+      authDomain: "manhwastore.firebaseapp.com",
+      projectId: "manhwastore",
+      storageBucket: "manhwastore.firebasestorage.app",
+      messagingSenderId: "706758090521",
+      appId: "1:706758090521:web:f2cf72a74a9e36e5296f88",
+      measurementId: "G-MS0H0PW03Q"
     };
 
-    function showToast(msg) {
-      const toast = document.getElementById('toastNotification');
-      document.getElementById('toastText').innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => { toast.classList.remove('show'); }, 3000);
-    }
+    // تهيئة السحابة
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const manhwaCollection = collection(db, "manhwas");
 
-    function initTheme() {
-      const savedTheme = localStorage.getItem('siteTheme') || 'dark';
-      document.body.setAttribute('data-theme', savedTheme);
-      document.getElementById('themeBtn').innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
-    }
+    let manhwaData = [];
 
-    function toggleTheme() {
-      const body = document.body;
-      const themeBtn = document.getElementById('themeBtn');
-      if (body.getAttribute('data-theme') === 'dark') {
-        body.setAttribute('data-theme', 'light');
-        themeBtn.innerHTML = '☀️';
-        localStorage.setItem('siteTheme', 'light');
-      } else {
-        body.setAttribute('data-theme', 'dark');
-        themeBtn.innerHTML = '🌙';
-        localStorage.setItem('siteTheme', 'dark');
-      }
-    }
+    // التزامن المباشر واللحظي مع السحابة (Real-time Cloud Sync)
+    onSnapshot(manhwaCollection, (snapshot) => {
+      manhwaData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderManhwaGrid(manhwaData);
+      renderHeroSlider(manhwaData);
+    }, (error) => {
+      console.error("خطأ في الاتصال بالسحابة:", error);
+      showToast("❌ حدث خطأ في مزامنة البيانات السحابية");
+    });
 
-    function toggleNotificationsModal() {
-      const m = document.getElementById('notificationsModal');
-      m.style.display = m.style.display === 'block' ? 'none' : 'block';
-      document.getElementById('notifBadge').style.display = 'none';
-    }
-
-    function loadDefaultDataIfNeeded() {
-      let genres = JSON.parse(localStorage.getItem('myGenres') || 'null');
-      if (!genres) {
-        genres = ['الكل', 'أكشن', 'رومنسي', 'إيسيكاي', 'نظام ومستوى'];
-        localStorage.setItem('myGenres', JSON.stringify(genres));
-      }
-
-      let manhwas = JSON.parse(localStorage.getItem('myManhwas') || '[]');
-      if (manhwas.length === 0) {
-        manhwas = [
-          { id: 1, title: "Omniscient Reader's Viewpoint", cover: "https://via.placeholder.com/180x240/1f2338/ffffff?text=ORV", genre: "نظام ومستوى", status: "مستمرة", desc: "قصة البطل الذي يقرأ رواية وتتحول لحقيقة.", rating: 4.9, ratingsCount: 15 },
-          { id: 2, title: "Solo Leveling", cover: "https://via.placeholder.com/180x240/1f2338/ffffff?text=Solo", genre: "أكشن", status: "منتهية", desc: "أضعف صياد يحصل على نظام تطور غامض.", rating: 5.0, ratingsCount: 30 },
-          { id: 3, title: "The Greatest Estate Developer", cover: "https://via.placeholder.com/180x240/1f2338/ffffff?text=Estate", genre: "إيسيكاي", status: "مستمرة", desc: "مهندس يتجسد في شخصية شرير ويبني الإمبراطوريات.", rating: 4.8, ratingsCount: 20 }
-        ];
-        localStorage.setItem('myManhwas', JSON.stringify(manhwas));
-      }
-    }
-
-    function getStoredGenres() { return JSON.parse(localStorage.getItem('myGenres') || '["الكل"]'); }
-
-    function renderGenresUI() {
-      const container = document.getElementById('genresContainer');
-      const select = document.getElementById('newGenreSelect');
-      const genres = getStoredGenres();
-
-      container.innerHTML = '';
-      select.innerHTML = '';
-
-      genres.forEach(genre => {
-        const chip = document.createElement('div');
-        chip.className = `genre-chip ${currentGenreFilter === genre ? 'active' : ''}`;
-        chip.innerText = genre === 'الكل' ? '🔥 الكل' : genre;
-        chip.onclick = () => filterByGenre(genre, chip);
-        container.appendChild(chip);
-
-        if (genre !== 'الكل') {
-          const opt = document.createElement('option');
-          opt.value = genre;
-          opt.innerText = genre;
-          select.appendChild(opt);
-        }
-      });
-    }
-
-    function addNewGenre() {
-      const customInput = document.getElementById('customGenreInput');
-      const newGenre = customInput.value.trim();
-      if (!newGenre) { showToast('اكتب اسم التصنيف الجديد!'); return; }
-
-      let genres = getStoredGenres();
-      if (genres.includes(newGenre)) { showToast('التصنيف موجود مسبقاً!'); return; }
-
-      genres.push(newGenre);
-      localStorage.setItem('myGenres', JSON.stringify(genres));
-      customInput.value = '';
-      renderGenresUI();
-      showToast(`تم إضافة التصنيف "${newGenre}" بنجاح! ✨`);
-    }
-
-    function toggleNavMenu() {
-      const menu = document.getElementById('mySideMenu');
-      menu.style.width = (menu.style.width === '260px') ? '0' : '260px';
-    }
-
-    function scrollToFavorites() {
-      const favSec = document.getElementById('favoritesSection');
-      if (favSec.style.display !== 'none') {
-        favSec.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        showToast('ليس لديك أي مانهوا في المفضلة حالياً!');
-      }
-    }
-
-    window.onscroll = function() {
-      const topBtn = document.getElementById('backToTop');
-      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-        topBtn.style.display = 'flex';
-      } else {
-        topBtn.style.display = 'none';
-      }
-    };
-
-    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-    function setupAuthUI() {
-      const loginBtn = document.getElementById('loginBtnNav');
-      const avatarBtn = document.getElementById('userAvatarBtn');
-      const adminBtn = document.getElementById('adminFloatingBtn');
-      const adminChatBtn = document.getElementById('adminChatBtn');
-
-      if (isAdmin) { 
-        adminBtn.style.display = 'flex'; 
-        adminChatBtn.style.display = 'flex';
-      } else { 
-        adminBtn.style.display = 'none'; 
-        adminChatBtn.style.display = 'none';
-      }
-
-      const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-      if (isUserLoggedIn && userProfile) {
-        loginBtn.style.display = 'none';
-        avatarBtn.style.display = 'block';
-        avatarBtn.src = userProfile.avatar || 'https://via.placeholder.com/100/8a2be2/ffffff?text=User';
-        document.getElementById('profileNameInput').value = userProfile.name || '';
-        document.getElementById('profileAvatarInput').value = userProfile.avatar || '';
-        document.getElementById('profileBioInput').value = userProfile.bio || '';
-        
-        const favCount = JSON.parse(localStorage.getItem('myFavorites') || '[]').length;
-        document.getElementById('userStatsBox').innerText = `📊 إحصائياتك: ${favCount} أعمال مفضلة`;
-      } else {
-        loginBtn.style.display = 'inline-block';
-        avatarBtn.style.display = 'none';
-      }
-    }
-
-    function toggleProfileModal() {
-      const modal = document.getElementById('profileModal');
-      modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function saveUserProfile() {
-      const name = document.getElementById('profileNameInput').value.trim();
-      let avatar = document.getElementById('profileAvatarInput').value.trim();
-      const bio = document.getElementById('profileBioInput').value.trim();
-      if (!name) { showToast('يرجى كتابة الاسم!'); return; }
-      if (avatar.includes('drive.google.com')) avatar = convertDriveLink(avatar);
-      const updatedProfile = { ...userProfile, name, avatar, bio };
-      localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-      showToast('تم حفظ الملف الشخصي بنجاح! ✨');
-      location.reload();
-    }
-
-    function logoutUser() {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('userProfile');
-      window.location.reload();
-    }
-
-    function exportBackup() {
-      const backupData = {
-        manhwas: localStorage.getItem('myManhwas'),
-        favorites: localStorage.getItem('myFavorites'),
-        genres: localStorage.getItem('myGenres')
-      };
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", "manhwa_store_backup.json");
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      showToast('تم تصدير نسخة الاحتياط بنجاح! 💾');
-    }
-
-    function openAdminModal(editId = null) {
-      renderGenresUI();
-      const modalOverlay = document.getElementById('adminModalOverlay');
-      const modalTitle = document.getElementById('adminModalTitle');
-      const saveBtn = document.getElementById('adminSaveBtn');
-
-      if (editId) {
-        const manhwas = getStoredManhwas();
-        const m = manhwas.find(item => item.id === editId);
-        if (m) {
-          document.getElementById('editManhwaId').value = m.id;
-          document.getElementById('newTitle').value = m.title;
-          document.getElementById('newCover').value = m.cover;
-          document.getElementById('newDesc').value = m.desc || '';
-          document.getElementById('newGenreSelect').value = m.genre || 'أكشن';
-          modalTitle.innerText = '🔒 لوحة الأدمن: تعديل المانهوا';
-          saveBtn.innerText = 'حفظ التعديلات';
-        }
-      } else {
-        document.getElementById('editManhwaId').value = '';
-        document.getElementById('newTitle').value = '';
-        document.getElementById('newCover').value = '';
-        document.getElementById('newDesc').value = '';
-        modalTitle.innerText = '🔒 لوحة الأدمن: إضافة مانهوا';
-        saveBtn.innerText = 'إضافة المانهوا للموقع';
-      }
-      modalOverlay.style.display = 'flex';
-    }
-
-    function closeAdminModal() { document.getElementById('adminModalOverlay').style.display = 'none'; }
-
-    function getStoredManhwas() { return JSON.parse(localStorage.getItem('myManhwas') || '[]'); }
-    function getFavorites() { return JSON.parse(localStorage.getItem('myFavorites') || '[]'); }
-
-    function loadManhwas() {
-      const manhwas = getStoredManhwas();
-      renderGrid(manhwas);
-    }
-
-    function goHome() {
-      window.history.pushState({}, '', 'index.html');
-      document.getElementById('detailsView').style.display = 'none';
-      document.getElementById('homeView').style.display = 'block';
-      renderGenresUI();
-      loadManhwas();
-      setupHeroSlider();
-      setupContinueReading();
-    }
-
-    function openRandomManhwa() {
-      const manhwas = getStoredManhwas();
-      if (manhwas.length === 0) { showToast('لا توجد مانهوات متاحة!'); return; }
-      const randomItem = manhwas[Math.floor(Math.random() * manhwas.length)];
-      window.history.pushState({}, '', `index.html?id=${randomItem.id}`);
-      showDetailsView(randomItem.id);
-    }
-
-    function showDetailsView(id) {
-      document.getElementById('homeView').style.display = 'none';
-      const detailsContainer = document.getElementById('detailsView');
-      detailsContainer.style.display = 'block';
-
-      const manhwas = getStoredManhwas();
-      const manhwa = manhwas.find(m => m.id === id);
-
-      if (!manhwa) {
-        detailsContainer.innerHTML = '<h2 style="text-align:center; color:#ff4d4d;">العمل غير موجود!</h2><button class="btn" onclick="goHome()">العودة للرئيسية</button>';
-        return;
-      }
-
-      const avgRating = manhwa.rating ? manhwa.rating.toFixed(1) : '4.8';
-      const commentsCount = JSON.parse(localStorage.getItem(`comments_${manhwa.id}_1`) || '[]').length;
-
-      detailsContainer.innerHTML = `
-        <button class="btn" style="width:auto; padding:7px 14px; margin-bottom:15px; font-size:12px;" onclick="goHome()">← العودة للرئيسية</button>
-        <div class="details-hero">
-          <img src="${manhwa.cover}" class="details-img" alt="${manhwa.title}">
-          <div class="details-info">
-            <div class="details-title">${manhwa.title}</div>
-            <span class="details-genre">${manhwa.genre || 'عام'}</span>
-            <div class="rating-box">⭐ التقييم العام: <strong>${avgRating} / 5</strong> (${manhwa.ratingsCount || 1} صوت) • 💬 التعليقات: ${commentsCount}</div>
-            <div class="details-desc">${manhwa.desc || 'لا توجد قصة متاحة لهذا العمل حالياً.'}</div>
-            
-            <div style="margin-top: 10px;">
-              <span style="font-size:12px; font-weight:bold; color:#aaa; display:block; margin-bottom:5px;">قيم العمل الآن (مرة واحدة فقط):</span>
-              <div id="starButtonsContainer">
-                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 1)">⭐</button>
-                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 2)">⭐</button>
-                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 3)">⭐</button>
-                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 4)">⭐</button>
-                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 5)">⭐</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="chapters-section">
-          <div class="chapters-title">📖 قائمة الفصول المتاحة</div>
-          <div class="chapters-grid">
-            <a href="manhwa.html?id=${manhwa.id}&chap=1" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 1)">الفصل 1</a>
-            <a href="manhwa.html?id=${manhwa.id}&chap=2" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 2)">الفصل 2</a>
-            <a href="manhwa.html?id=${manhwa.id}&chap=3" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 3)">الفصل 3</a>
-            <a href="manhwa.html?id=${manhwa.id}&chap=4" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 4)">الفصل 4</a>
-            <a href="manhwa.html?id=${manhwa.id}&chap=5" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 5)">الفصل 5</a>
-          </div>
-        </div>
-      `;
-      
-      const ratedList = JSON.parse(localStorage.getItem('userRatedManhwas') || '[]');
-      if (ratedList.includes(id)) {
-        document.getElementById('starButtonsContainer').innerHTML = '<span style="color:#00f2fe; font-size:12px; font-weight:bold;">✨ لقد قمت بتقييم هذا العمل مسبقاً.</span>';
-      }
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function rateManhwa(id, stars) {
-      let ratedList = JSON.parse(localStorage.getItem('userRatedManhwas') || '[]');
-      if (ratedList.includes(id)) {
-        showToast('عذراً، يمكنك تقييم العمل مرة واحدة فقط!');
-        return;
-      }
-
-      let manhwas = JSON.parse(localStorage.getItem('myManhwas') || '[]');
-      let manhwa = manhwas.find(m => m.id === id);
-      if (!manhwa) return;
-
-      let currentRating = manhwa.rating || 5.0;
-      let count = manhwa.ratingsCount || 1;
-      let newTotal = (currentRating * count) + stars;
-      count += 1;
-      manhwa.rating = newTotal / count;
-      manhwa.ratingsCount = count;
-
-      localStorage.setItem('myManhwas', JSON.stringify(manhwas));
-      
-      ratedList.push(id);
-      localStorage.setItem('userRatedManhwas', JSON.stringify(ratedList));
-
-      showToast(`شكراً لتقييمك! تم تسجيل ${stars} نجوم ⭐`);
-      showDetailsView(id);
-    }
-
-    function filterByGenre(genre, element) {
-      currentGenreFilter = genre;
-      document.querySelectorAll('.genre-chip').forEach(chip => chip.classList.remove('active'));
-      if(element) element.classList.add('active');
-      filterManhwas();
-    }
-
-    function filterManhwas() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      let manhwas = getStoredManhwas();
-
-      if (currentGenreFilter !== 'الكل') {
-        manhwas = manhwas.filter(m => m.genre === currentGenreFilter);
-      }
-
-      const filtered = manhwas.filter(m => m.title.toLowerCase().includes(query) || (m.genre && m.genre.toLowerCase().includes(query)));
-      renderGrid(filtered);
-    }
-
-    function renderGrid(list) {
-      const grid = document.getElementById('manhwasGrid');
-      const favGrid = document.getElementById('favoritesGrid');
-      const favSection = document.getElementById('favoritesSection');
-      const favorites = getFavorites();
-
-      grid.innerHTML = '';
-      favGrid.innerHTML = '';
+    // عرض المانهوات في الشبكة
+    window.renderManhwaGrid = function(list) {
+      const grid = document.getElementById("manhwaGrid");
+      grid.innerHTML = "";
 
       if (list.length === 0) {
-        grid.innerHTML = '<p style="color:#777; font-size:13px; font-weight:bold;">لا توجد مانهوات مطابقة.</p>';
-        favSection.style.display = 'none';
+        grid.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: var(--text-muted); font-weight: bold;'>لا توجد مانهوات مضافة حتى الآن. اضغط على ⚙️ لإضافة أول مانهوا!</p>";
         return;
       }
 
-      let favList = list.filter(m => favorites.includes(m.id));
-      if (favList.length > 0) {
-        favSection.style.display = 'block';
-        favList.forEach(m => favGrid.appendChild(createCard(m, true)));
-      } else {
-        favSection.style.display = 'none';
-      }
-
-      list.forEach(m => grid.appendChild(createCard(m, favorites.includes(m.id))));
-    }
-
-    function createCard(m, isFav) {
-      const card = document.createElement('div');
-      card.className = 'card';
-      const ratingVal = m.rating ? m.rating.toFixed(1) : '4.8';
-      const genre = m.genre || 'عام';
-      const status = m.status || 'مستمرة';
-      const statusClass = status === 'منتهية' ? 'status-completed' : 'status-ongoing';
-      
-      const deleteBtnHTML = isAdmin ? `<button class="delete-card-btn" onclick="event.stopPropagation(); deleteManhwa(${m.id})" title="حذف">🗑️</button>` : '';
-
-      card.innerHTML = `
-        ${deleteBtnHTML}
-        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${m.id})">♥</button>
-        <img src="${m.cover}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/180x240/1f2338/ffffff?text=No+Image'">
-        <div class="card-body">
-          <div class="card-title">${m.title}</div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-            <span class="card-genre-tag">${genre}</span>
-            <span class="status-badge ${statusClass}">${status}</span>
-          </div>
-          <div class="card-rating">
-            <span>⭐ ${ratingVal}</span>
-          </div>
-          <button class="btn">عرض التفاصيل</button>
-        </div>
-      `;
-
-      card.onclick = () => {
-        window.history.pushState({}, '', `index.html?id=${m.id}`);
-        showDetailsView(m.id);
-      };
-
-      if (isAdmin) {
-        let pressTimer;
-        card.addEventListener('touchstart', () => {
-          pressTimer = setTimeout(() => { openAdminModal(m.id); }, 700);
-        });
-        card.addEventListener('touchend', () => { clearTimeout(pressTimer); });
-        card.addEventListener('mousedown', () => {
-          pressTimer = setTimeout(() => { openAdminModal(m.id); }, 700);
-        });
-        card.addEventListener('mouseup', () => { clearTimeout(pressTimer); });
-      }
-
-      return card;
-    }
-
-    function deleteManhwa(id) {
-      if (confirm('هل أنت متأكد من حذف هذه المانهوا نهائياً؟ 🗑️')) {
-        let manhwas = getStoredManhwas();
-        manhwas = manhwas.filter(m => m.id !== id);
-        localStorage.setItem('myManhwas', JSON.stringify(manhwas));
-        
-        let favorites = getFavorites().filter(favId => favId !== id);
-        localStorage.setItem('myFavorites', JSON.stringify(favorites));
-
-        showToast('تم حذف المانهوا بنجاح!');
-        loadManhwas();
-        setupHeroSlider();
-      }
-    }
-
-    function toggleFavorite(id) {
-      let favorites = getFavorites();
-      if (favorites.includes(id)) {
-        favorites = favorites.filter(favId => favId !== id);
-        showToast('إزالة من المفضلة 🤍');
-      } else {
-        favorites.push(id);
-        showToast('تمت الإضافة للمفضلة ❤️');
-      }
-      localStorage.setItem('myFavorites', JSON.stringify(favorites));
-      loadManhwas();
-      setupAuthUI();
-    }
-
-    function convertDriveLink(url) {
-      url = url.trim();
-      let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-      return match && match[1] ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
-    }
-
-    function saveManhwaData() {
-      const editId = document.getElementById('editManhwaId').value;
-      const title = document.getElementById('newTitle').value.trim();
-      let cover = document.getElementById('newCover').value.trim();
-      const desc = document.getElementById('newDesc').value.trim();
-      const genre = document.getElementById('newGenreSelect').value;
-
-      if (!title || !cover) { showToast('الرجاء تعبئة الاسم والرابط!'); return; }
-      cover = convertDriveLink(cover);
-      const manhwas = getStoredManhwas();
-
-      if (editId) {
-        let manhwa = manhwas.find(m => m.id == editId);
-        if (manhwa) {
-          manhwa.title = title;
-          manhwa.cover = cover;
-          manhwa.desc = desc || manhwa.desc;
-          manhwa.genre = genre;
-          localStorage.setItem('myManhwas', JSON.stringify(manhwas));
-          showToast('تم تعديل المانهوا بنجاح! 🛠️');
-        }
-      } else {
-        const newId = manhwas.length > 0 ? manhwas[manhwas.length - 1].id + 1 : 1;
-        manhwas.push({ id: newId, title, cover, genre, status: "مستمرة", desc: desc || 'لا توجد قصة متاحة.', rating: 5.0, ratingsCount: 1 });
-        localStorage.setItem('myManhwas', JSON.stringify(manhwas));
-        showToast('تمت إضافة المانهوا بنجاح! 🚀');
-      }
-
-      closeAdminModal();
-      loadManhwas();
-      setupHeroSlider();
-    }
-
-    function setupHeroSlider() {
-      const slider = document.getElementById('heroSlider');
-      const manhwas = getStoredManhwas();
-      if (manhwas.length === 0) { slider.innerHTML = ''; return; }
-
-      let html = '';
-      const featured = manhwas.slice(0, 3);
-      featured.forEach((m, index) => {
-        html += `
-          <div class="hero-slide ${index === 0 ? 'active' : ''}" onclick="window.history.pushState({}, '', 'index.html?id=${m.id}'); showDetailsView(${m.id});" style="cursor:pointer;">
-            <img src="${m.cover}" class="hero-img" alt="${m.title}">
-            <div class="hero-content">
-              <div class="hero-title">${m.title}</div>
-              <div class="hero-desc">${m.desc || 'أحدث الأعمال المضافة.'}</div>
-              <span class="btn" style="width: 90px; padding: 5px 8px; font-size:11px; text-align:center;">اقرأ الآن</span>
-            </div>
+      list.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <button class="delete-card-btn" onclick="event.stopPropagation(); deleteManhwaCloud('${item.id}')" title="حذف">🗑️</button>
+          <img src="${item.cover || 'https://via.placeholder.com/150'}" alt="${item.title}">
+          <div class="card-body">
+            <span class="card-genre-tag">${item.genre || 'عام'}</span>
+            <div class="card-title">${item.title}</div>
+            <button class="btn" style="margin-top:5px;" onclick="event.stopPropagation(); editManhwaModal('${item.id}')">تعديل ✏️</button>
           </div>
         `;
+        card.onclick = () => openDetails(item);
+        grid.appendChild(card);
       });
-      slider.innerHTML = html;
+    };
 
-      let slides = slider.querySelectorAll('.hero-slide');
-      if (slides.length > 1) {
-        let currentSlide = 0;
-        setInterval(() => {
-          slides[currentSlide].classList.remove('active');
-          currentSlide = (currentSlide + 1) % slides.length;
-          slides[currentSlide].classList.add('active');
-        }, 4000);
+    // عرض الهيرو سلايدر
+    window.renderHeroSlider = function(list) {
+      const slider = document.getElementById("heroSlider");
+      if (!list || list.length === 0) {
+        slider.style.display = "none";
+        return;
       }
-    }
+      slider.style.display = "block";
+      const item = list[0];
+      slider.innerHTML = `
+        <div class="hero-slide active">
+          <img class="hero-img" src="${item.cover}" alt="${item.title}">
+          <div class="hero-content">
+            <div class="hero-title">${item.title}</div>
+            <div class="hero-desc">${item.desc || 'لا يوجد وصف متاح.'}</div>
+            <button class="btn" onclick="openDetailsById('${item.id}')" style="width:100px;">تصفح الآن 🔥</button>
+          </div>
+        </div>
+      `;
+    };
 
-    function setupContinueReading() {
-      const lastRead = JSON.parse(localStorage.getItem('lastRead') || 'null');
-      if (lastRead) {
-        document.getElementById('continueReadingBar').style.display = 'flex';
-        document.getElementById('lastReadTitle').innerText = lastRead.title;
-        document.getElementById('lastReadBtn').href = lastLink = lastRead.url;
+    // حفظ أو تحديث المانهوا في قاعدة البيانات السحابية
+    window.saveManhwaData = async function() {
+      const id = document.getElementById("editManhwaId").value;
+      const title = document.getElementById("newTitle").value.trim();
+      const cover = document.getElementById("newCover").value.trim();
+      const desc = document.getElementById("newDesc").value.trim();
+      const genre = document.getElementById("newGenreSelect").value;
+
+      if (!title || !cover) {
+        showToast("⚠️ يرجى إدخال اسم المانهوا ورابط الغلاف!");
+        return;
       }
-    }
 
-    function saveLastRead(title, id, chap) {
-      const data = { title, id, url: `manhwa.html?id=${id}&chap=${chap}` };
-      localStorage.setItem('lastRead', JSON.stringify(data));
-    }
+      try {
+        if (id) {
+          // تحديث عمل موجود في السحابة
+          const docRef = doc(db, "manhwas", id);
+          await updateDoc(docRef, { title, cover, desc, genre });
+          showToast("✨ تم تحديث بيانات المانهوا أونلاين بنجاح!");
+        } else {
+          // إضافة عمل جديد للسحابة
+          await addDoc(manhwaCollection, { title, cover, desc, genre, createdAt: new Date() });
+          showToast("🚀 تم إضافة المانهوا أونلاين لجميع الزوار!");
+        }
+        closeAdminModal();
+      } catch (err) {
+        console.error(err);
+        showToast("❌ فشل الحفظ في السحابة!");
+      }
+    };
+
+    // حذف مانهوا من السحابة
+    window.deleteManhwaCloud = async function(id) {
+      if (confirm("هل أنت تأكد من رغبتك في حذف هذه المانهوا نهائياً أونلاين؟")) {
+        try {
+          await deleteDoc(doc(db, "manhwas", id));
+          showToast("🗑️ تم حذف المانهوا من قاعدة البيانات السحابية!");
+        } catch (err) {
+          console.error(err);
+          showToast("❌ حدث خطأ أثناء الحذف!");
+        }
+      }
+    };
+
+    // فتح نافذة التعديل
+    window.editManhwaModal = function(id) {
+      const item = manhwaData.find(m => m.id === id);
+      if (!item) return;
+      document.getElementById("editManhwaId").value = item.id;
+      document.getElementById("newTitle").value = item.title;
+      document.getElementById("newCover").value = item.cover;
+      document.getElementById("newDesc").value = item.desc || "";
+      document.getElementById("newGenreSelect").value = item.genre || "أكشن";
+      document.getElementById("adminModalTitle").innerText = "✏️ تعديل بيانات المانهوا";
+      document.getElementById("adminModalOverlay").style.display = "flex";
+    };
+
+    // البحث والتصفية
+    window.filterManhwas = function() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = manhwaData.filter(m => m.title.toLowerCase().includes(query));
+      renderManhwaGrid(filtered);
+    };
+
+    // تفاصيل العمل
+    window.openDetails = function(item) {
+      document.getElementById("homeView").style.display = "none";
+      document.getElementById("detailsView").style.display = "block";
+      document.getElementById("detailImg").src = item.cover;
+      document.getElementById("detailTitle").innerText = item.title;
+      document.getElementById("detailGenre").innerText = item.genre || "عام";
+      document.getElementById("detailDesc").innerText = item.desc || "لا يوجد وصف حالياً.";
+    };
+
+    window.openDetailsById = function(id) {
+      const item = manhwaData.find(m => m.id === id);
+      if (item) openDetails(item);
+    };
+
+    window.goHome = function() {
+      document.getElementById("detailsView").style.display = "none";
+      document.getElementById("homeView").style.display = "block";
+    };
+
+    window.openAdminModal = function() {
+      document.getElementById("editManhwaId").value = "";
+      document.getElementById("newTitle").value = "";
+      document.getElementById("newCover").value = "";
+      document.getElementById("newDesc").value = "";
+      document.getElementById("adminModalTitle").innerText = "🔒 إضافة مانهوا جديدة أونلاين";
+      document.getElementById("adminModalOverlay").style.display = "flex";
+    };
+
+    window.closeAdminModal = function() {
+      document.getElementById("adminModalOverlay").style.display = "none";
+    };
+
+    window.showToast = function(msg) {
+      const toast = document.getElementById("toastNotification");
+      document.getElementById("toastText").innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    };
+
+    window.toggleNavMenu = function() {
+      const nav = document.getElementById("mySideMenu");
+      nav.style.width = nav.style.width === "250px" ? "0" : "250px";
+    };
+
+    window.toggleTheme = function() {
+      const body = document.body;
+      const current = body.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+      body.setAttribute("data-theme", next);
+      document.getElementById("themeBtn").innerText = next === "dark" ? "🌙" : "☀️";
+    };
+
+    window.openRandomManhwa = function() {
+      if (manhwaData.length === 0) return;
+      const randomItem = manhwaData[Math.floor(Math.random() * manhwaData.length)];
+      openDetails(randomItem);
+    };
   </script>
 </body>
 </html>
