@@ -228,9 +228,10 @@
         return;
       }
 
-      // 3. حظر اسم admin
-      if (username.toLowerCase() === 'admin') {
-        alert('❌ هذا الاسم محجوز للأدمن الرئيسي!');
+      // 3. حظر أسماء الأدمن المعتمدة من التكرار
+      const reservedAdmins = ['admin', 'yhya', 'andrew'];
+      if (reservedAdmins.includes(username.toLowerCase())) {
+        alert('❌ هذا الاسم محجوز لإدارة الموقع!');
         return;
       }
 
@@ -276,22 +277,33 @@
         return;
       }
 
-      // الأدمن الرئيسي بكلمة المرور htibss41
-      if (username.toLowerCase() === 'admin' && password === 'htibss41') {
+      // 🔑 حسابات الأدمن الثابتة والمعتمدة
+      const systemAdmins = {
+        'admin': { pass: 'htibss41', name: 'Admin 🗿', avatar: 'https://via.placeholder.com/100/00f2fe/000000?text=Admin', bio: 'مدير الموقع الرئيسي 🗿🔥' },
+        'yhya': { pass: 'yhya123', name: 'yhya', avatar: 'https://via.placeholder.com/100/8a2be2/ffffff?text=yhya', bio: 'أدمن المتجر 🗿' },
+        'andrew': { pass: 'andrew2026', name: 'Andrew', avatar: 'https://via.placeholder.com/100/00f2fe/000000?text=Andrew', bio: 'أدمن المتجر 🗿🔥' }
+      };
+
+      const userKey = username.toLowerCase();
+
+      // التحقق أولاً إذا كان الحساب من حسابات الأدمنية الثابتين
+      if (systemAdmins[userKey] && systemAdmins[userKey].pass === password) {
+        const adminData = systemAdmins[userKey];
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userProfile', JSON.stringify({
-          username: 'admin',
-          name: 'Admin 🗿',
-          avatar: 'https://via.placeholder.com/100/00f2fe/000000?text=Admin',
-          bio: 'مدير الموقع الأسطوري'
+          username: adminData.name,
+          name: adminData.name,
+          avatar: adminData.avatar,
+          bio: adminData.bio
         }));
-        alert('أهلاً بك يا أدمن!');
+        alert(`أهلاً بك يا ${adminData.name}! 🚀`);
         window.location.href = 'index.html';
         return;
       }
 
+      // إذا لم يكن أدمن رئيسي، يتم البحث في قاعدة بيانات المسجلين الجدد
       let users = getAllUsers();
-      const foundUser = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+      const foundUser = users.find(u => u.username.toLowerCase() === userKey && u.password === password);
 
       if (foundUser) {
         localStorage.setItem('isLoggedIn', 'true');
