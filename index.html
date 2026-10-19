@@ -129,11 +129,6 @@
     .hero-title { font-size: 16px; font-weight: bold; color: var(--accent-glow); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .hero-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: bold; line-height: 1.4; }
 
-    .continue-reading-bar {
-      width: 100%; max-width: 960px; margin: 0 auto 15px auto; background: linear-gradient(135deg, rgba(138,43,226,0.2), rgba(0,242,254,0.2));
-      border: 2px solid var(--accent); padding: 10px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
-    }
-
     .genres-container { width: 100%; max-width: 960px; margin: 0 auto 15px auto; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
     .genres-container::-webkit-scrollbar { display: none; }
     .genre-chip {
@@ -165,23 +160,11 @@
     .card img { width: 100%; height: 190px; object-fit: cover; display: block; }
     .card-body { padding: 9px; }
     .card-title { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-rating { font-size: 11px; font-weight: bold; color: #f1c40f; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
-
-    .status-badge { font-size: 9px; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
-    .status-ongoing { background: rgba(0, 255, 100, 0.2); color: #00ff66; border: 1px solid rgba(0, 255, 100, 0.4); }
-    .status-completed { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.4); }
-
+    
     .card-genre-tag { font-size: 10px; font-weight: bold; background: rgba(138,43,226,0.25); color: var(--accent-glow); padding: 2px 5px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
 
     .btn { background: var(--accent); color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px; width: 100%; text-align: center; text-decoration: none; display: block; transition: 0.2s; }
     .btn:hover { background: var(--accent-glow); color: #000; }
-
-    .fav-btn {
-      position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75);
-      border: none; color: #fff; font-size: 16px; cursor: pointer; border-radius: 50%;
-      width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; z-index: 2;
-    }
-    .fav-btn.active { color: #ff4d4d; }
 
     .delete-card-btn {
       position: absolute; top: 8px; right: 8px; background: rgba(255, 77, 77, 0.95);
@@ -198,7 +181,6 @@
     .details-title { font-size: 18px; font-weight: bold; color: var(--accent-glow); margin-bottom: 8px; }
     .details-genre { background: rgba(138,43,226,0.25); color: var(--accent-glow); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; display: inline-block; margin-bottom: 8px; }
     .details-desc { font-size: 13px; font-weight: bold; color: #ddd; line-height: 1.5; margin-bottom: 12px; }
-    .rating-box { font-size: 13px; font-weight: bold; color: #f1c40f; margin-bottom: 12px; }
 
     .admin-floating-btn {
       position: fixed; bottom: 75px; right: 15px; width: 45px; height: 45px; border-radius: 50%;
@@ -252,27 +234,14 @@
 
     <div id="notificationsModal" class="notifications-modal">
       <h4 style="color:var(--accent-glow); margin:0 0 8px 0; font-size:13px; border-bottom:2px solid var(--accent); padding-bottom:4px;">التنبيهات الفورية 🔔</h4>
-      <div class="notification-item">✨ تم تفعيل الحفظ السحابي أونلاين بنجاح!</div>
-    </div>
-
-    <div id="profileModal" class="profile-modal">
-      <h4>الملف الشخصي 👤</h4>
-      <div class="stats-box" id="userStatsBox">عدد المفضلات: 0 أعمال</div>
-      <input type="text" id="profileNameInput" placeholder="الاسم الشخصي">
-      <input type="text" id="profileAvatarInput" placeholder="رابط صورة الآفاتار">
-      <textarea id="profileBioInput" placeholder="اكتب وصف قصير (Bio)..."></textarea>
-      <button onclick="saveUserProfile()" class="btn">حفظ البيانات</button>
-      
-      <div style="display:flex; gap:5px; margin-top:8px;">
-        <button onclick="logoutUser()" style="background: #ff4d4d; border:none; padding:5px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:100%;">خروج 🚪</button>
-      </div>
+      <div class="notification-item">✨ تم تفعيل قاعدة البيانات السحابية Firestore بنجاح!</div>
     </div>
   </header>
 
   <div id="mySideMenu" class="side-drawer">
     <button class="close-btn" onclick="toggleNavMenu()">&times;</button>
     <a href="#" onclick="toggleNavMenu(); goHome();">🏠 الرئيسية</a>
-    <a href="login.html">🔐 لوحة التحكم / دخول</a>
+    <a href="login.html">🔐 تسجيل / دخول</a>
   </div>
 
   <div id="adminFloatingBtn" class="admin-floating-btn" onclick="openAdminModal()" title="إضافة مانهوا">⚙️</div>
@@ -328,12 +297,12 @@
     </div>
   </div>
 
-  <!-- تضمين مكتبات Firebase السحابية -->
+  <!-- تضمين مكتبات Firebase السحابية والتزامن الفوري -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // إعدادات الفايربيس الخادمة لمشروعك
+    // إعدادات فايربيس الخاصة بمشروعك
     const firebaseConfig = {
       apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
       authDomain: "manhwastore.firebaseapp.com",
@@ -344,14 +313,13 @@
       measurementId: "G-MS0H0PW03Q"
     };
 
-    // تهيئة السحابة
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const manhwaCollection = collection(db, "manhwas");
 
     let manhwaData = [];
 
-    // التزامن المباشر واللحظي مع السحابة (Real-time Cloud Sync)
+    // التزامن اللحظي المباشر مع السحابة (Real-time Cloud Sync)
     onSnapshot(manhwaCollection, (snapshot) => {
       manhwaData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderManhwaGrid(manhwaData);
@@ -361,7 +329,7 @@
       showToast("❌ حدث خطأ في مزامنة البيانات السحابية");
     });
 
-    // عرض المانهوات في الشبكة
+    // عرض شبكة المانهوات
     window.renderManhwaGrid = function(list) {
       const grid = document.getElementById("manhwaGrid");
       grid.innerHTML = "";
@@ -388,7 +356,7 @@
       });
     };
 
-    // عرض الهيرو سلايدر
+    // عرض السلايدر العلوي
     window.renderHeroSlider = function(list) {
       const slider = document.getElementById("heroSlider");
       if (!list || list.length === 0) {
@@ -424,12 +392,10 @@
 
       try {
         if (id) {
-          // تحديث عمل موجود في السحابة
           const docRef = doc(db, "manhwas", id);
           await updateDoc(docRef, { title, cover, desc, genre });
           showToast("✨ تم تحديث بيانات المانهوا أونلاين بنجاح!");
         } else {
-          // إضافة عمل جديد للسحابة
           await addDoc(manhwaCollection, { title, cover, desc, genre, createdAt: new Date() });
           showToast("🚀 تم إضافة المانهوا أونلاين لجميع الزوار!");
         }
@@ -442,7 +408,7 @@
 
     // حذف مانهوا من السحابة
     window.deleteManhwaCloud = async function(id) {
-      if (confirm("هل أنت تأكد من رغبتك في حذف هذه المانهوا نهائياً أونلاين؟")) {
+      if (confirm("هل أنت متأكد من رغبتك في حذف هذه المانهوا نهائياً أونلاين؟")) {
         try {
           await deleteDoc(doc(db, "manhwas", id));
           showToast("🗑️ تم حذف المانهوا من قاعدة البيانات السحابية!");
@@ -453,7 +419,7 @@
       }
     };
 
-    // فتح نافذة التعديل
+    // فتح نافذة التعديل للأدمن
     window.editManhwaModal = function(id) {
       const item = manhwaData.find(m => m.id === id);
       if (!item) return;
@@ -466,14 +432,14 @@
       document.getElementById("adminModalOverlay").style.display = "flex";
     };
 
-    // البحث والتصفية
+    // التصفية والبحث الفوري
     window.filterManhwas = function() {
       const query = document.getElementById("searchInput").value.toLowerCase();
       const filtered = manhwaData.filter(m => m.title.toLowerCase().includes(query));
       renderManhwaGrid(filtered);
     };
 
-    // تفاصيل العمل
+    // عرض تفاصيل العمل
     window.openDetails = function(item) {
       document.getElementById("homeView").style.display = "none";
       document.getElementById("detailsView").style.display = "block";
