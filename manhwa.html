@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قراءة الفصل - موقع المانهوا</title>
+  <style>
+    body {
+      background-color: #0d0f17;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      overscroll-behavior-y: contain;
+    }
+
+    #pullRefreshIndicator {
+      position: fixed;
+      top: -50px;
+      left: 0;
+      width: 100%;
+      height: 45px;
+      background: #161926;
+      color: #00f2fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: bold;
+      transition: top 0.2s ease;
+      z-index: 1000;
+      border-bottom: 1px solid #8a2be2;
+    }
+
+    .reader-header {
+      background: #161926;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #8a2be2;
+    }
+    .chapter-title-top {
+      color: #00f2fe;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .back-link {
+      color: #aaa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .nav-chapters-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: #161926;
+      margin: 10px auto;
+      max-width: 800px;
+      border-radius: 8px;
+    }
+    .nav-btn {
+      background: #8a2be2;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    .nav-btn:hover {
+      background: #00f2fe;
+      color: #000;
+    }
+    .nav-btn.disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .admin-chapter-panel {
+      background: #161926;
+      padding: 15px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 10px;
+      border: 1px solid #8a2be2;
+      display: none;
+    }
+    .admin-chapter-panel textarea {
+      width: 100%;
+      height: 100px;
+      background: #0d0f17;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .reader-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #0d0f17;
+      text-align: center;
+    }
+    
+    .img-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 350px;
+      background-color: #121520;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .img-loading-text {
+      position: absolute;
+      color: #8a2be2;
+      font-size: 14px;
+      font-weight: bold;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    .reader-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+      position: relative;
+      z-index: 2;
+    }
+
+    #scrollToTopBtn {
+      position: fixed;
+      bottom: 25px;
+      left: 25px;
+      background: #8a2be2;
+      color: #fff;
+      border: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      z-index: 999;
+      transition: 0.2s;
+    }
+    #scrollToTopBtn:hover {
+      background: #00f2fe;
+      color: #000;
+    }
+
+    /* ==================== قسم التعليقات ==================== */
+    .comments-section {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #161926;
+      border-radius: 12px;
+      border: 1px solid #8a2be2;
+      box-sizing: border-box;
+    }
+    .comments-title {
+      color: #00f2fe;
+      font-size: 18px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #8a2be2;
+      padding-bottom: 8px;
+    }
+    
+    .add-comment-box {
+      margin-bottom: 30px;
+      background: #0d0f17;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+    .add-comment-box textarea {
+      width: 100%;
+      height: 70px;
+      background: #161926;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      resize: none;
+      outline: none;
+      box-sizing: border-box;
+      font-size: 13px;
+    }
+    .add-comment-box button {
+      background: #8a2be2;
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: 0.2s;
+    }
+    .add-comment-box button:hover {
+      background: #00f2fe;
+      color: #000;
+    }
+
+    .comment-card {
+      background: #0d0f17;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #282c40;
+      margin-bottom: 15px;
+    }
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .comment-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #8a2be2;
+    }
+    .comment-user-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .comment-username {
+      color: #00f2fe;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .comment-user-bio {
+      color: #888;
+      font-size: 11px;
+      margin-top: 2px;
+    }
+    .comment-text {
+      color: #ddd;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+    }
+    .comment-actions {
+      display: flex;
+      gap: 15px;
+      font-size: 12px;
+      align-items: center;
+    }
+    .action-btn {
+      color: #aaa;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-size: 12px;
+      transition: 0.2s;
+    }
+    .action-btn:hover {
+      color: #00f2fe;
+    }
+
+    .owner-controls {
+      margin-right: auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .replies-container {
+      margin-right: 30px;
+      margin-top: 12px;
+      padding-right: 12px;
+      border-right: 2px solid #8a2be2;
+    }
+    .reply-card {
+      background: #121522;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+
+    .reply-input-box, .edit-input-box {
+      margin-top: 10px;
+      display: none;
+    }
+    .reply-input-box textarea, .edit-input-box textarea {
+      width: 100%;
+      height: 50px;
+      background: #161926;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 8px;
+      border-radius: 6px;
+      resize: none;
+      outline: none;
+      box-sizing: border-box;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pullRefreshIndicator">🔄 اسحب للأسفل للتحديث...</div>
+
+  <button id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
+
+  <div class="reader-header">
+    <a href="index.html" class="back-link">← الرئيسية</a>
+    <div id="chapterHeaderTitle" class="chapter-title-top">جاري التحميل...</div>
+    <a href="#" onclick="goBackToManhwa()" class="back-link">صفحة المانهوا</a>
+  </div>
+
+  <div class="nav-chapters-bar">
+    <button id="prevBtnTop" class="nav-btn" onclick="goToChapter(-1)">← الفصل السابق</button>
+    <button id="nextBtnTop" class="nav-btn" onclick="goToChapter(1)">الفصل التالي →</button>
+  </div>
+
+  <div id="adminPanel" class="admin-chapter-panel">
+    <h3 style="color: #00f2fe; margin-bottom: 10px; font-size: 15px;">🔒 لوحة الأدمن: إضافة صور هذا الفصل</h3>
+    <p style="color: #aaa; font-size: 12px; margin-bottom: 8px;">ضع رابط الدرايف العادي لكل صورة في سطر مستقل:</p>
+    <textarea id="chapterImagesInput" placeholder="https://drive.google.com/file/d/.../view?usp=drivesdk"></textarea>
+    <button onclick="saveChapterImages()" style="background: #8a2be2; color: #fff; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;">حفظ صور الفصل بدقة كاملة</button>
+  </div>
+
+  <div class="reader-container" id="readerImagesContainer">
+    <p style="color: #777; padding: 50px 0;">لا توجد صور مضافة لهذا الفصل حتى الآن.</p>
+  </div>
+
+  <div class="nav-chapters-bar">
+    <button id="prevBtnBottom" class="nav-btn" onclick="goToChapter(-1)">← الفصل السابق</button>
+    <button id="nextBtnBottom" class="nav-btn" onclick="goToChapter(1)">الفصل التالي →</button>
+  </div>
+
+  <div class="comments-section">
+    <div class="comments-title">💬 التعليقات والمناقشات</div>
+
+    <div class="add-comment-box">
+      <textarea id="mainCommentInput" placeholder="اكتب تعليقك على هذا الفصل..."></textarea>
+      <button onclick="submitComment()">نشر التعليق</button>
+    </div>
+
+    <div id="commentsList"></div>
+  </div>
+
+  <script>
+    const userProfile = JSON.parse(localStorage.getItem('userProfile') || 'null');
+    // فحص صارم للأدمن فقط (يتحقق من اسم الحساب admin)
+    const isAdmin = localStorage.getItem('isLoggedIn') === 'true' && userProfile && (userProfile.username === 'admin' || userProfile.name === 'Admin 🗿');
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const manhwaId = parseInt(urlParams.get('id'));
+    let currentChapterNum = parseInt(urlParams.get('chap')) || 1;
+
+    const manhwas = JSON.parse(localStorage.getItem('myManhwas') || '[]');
+    const currentManhwa = manhwas.find(m => m.id === manhwaId);
+
+    window.onload = function() {
+      if (currentManhwa) {
+        loadChapterData();
+        saveReadingProgress();
+        loadComments();
+      } else {
+        document.getElementById('chapterHeaderTitle').innerText = 'المانهوا غير موجودة';
+      }
+      initPullToRefresh();
+      initScrollToTopBtn();
+    };
+
+    function loadChapterData() {
+      document.getElementById('chapterHeaderTitle').innerText = `${currentManhwa.title} - الفصل ${currentChapterNum}`;
+      const chaptersData = JSON.parse(localStorage.getItem(`chap_imgs_${manhwaId}_${currentChapterNum}`) || '[]');
+
+      // إظهار لوحة التحكم للأدمن الحقيقي فقط
+      if (isAdmin) {
+        document.getElementById('adminPanel').style.display = 'block';
+        document.getElementById('chapterImagesInput').value = chaptersData.join('\n');
+      } else {
+        document.getElementById('adminPanel').style.display = 'none';
+      }
+
+      renderImages(chaptersData);
+      updateNavButtons();
+    }
+
+    function saveReadingProgress() {
+      const progressData = { manhwaId: manhwaId, chapter: currentChapterNum };
+      localStorage.setItem(`progress_${manhwaId}`, JSON.stringify(progressData));
+    }
+
+    function initScrollToTopBtn() {
+      const btn = document.getElementById('scrollToTopBtn');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          btn.style.display = 'flex';
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function initPullToRefresh() {
+      let startY = 0;
+      let pulling = false;
+      const indicator = document.getElementById('pullRefreshIndicator');
+
+      window.addEventListener('touchstart', (e) => {
+        if (window.scrollY === 0) {
+          startY = e.touches[0].clientY;
+          pulling = true;
+        }
+      });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!pulling) return;
+        let currentY = e.touches[0].clientY;
+        let diff = currentY - startY;
+
+        if (diff > 0 && diff < 130 && window.scrollY === 0) {
+          indicator.style.top = `${diff - 45}px`;
+          if (diff > 80) {
+            indicator.innerText = 'إفلت لتحديث الصفحة 🔄';
+          } else {
+            indicator.innerText = 'سحب للأسفل للتحديث...';
+          }
+        }
+      });
+
+      window.addEventListener('touchend', (e) => {
+        if (!pulling) return;
+        pulling = false;
+        let currentY = e.changedTouches[0].clientY;
+        let diff = currentY - startY;
+
+        if (diff > 80 && window.scrollY === 0) {
+          indicator.innerText = 'جاري التحديث...';
+          indicator.style.top = '0px';
+          setTimeout(() => {
+            window.location.reload();
+          }, 400);
+        } else {
+          indicator.style.top = '-50px';
+        }
+      });
+    }
+
+    function goToChapter(step) {
+      const targetChapter = currentChapterNum + step;
+      if (targetChapter >= 1) {
+        window.location.href = `manhwa.html?id=${manhwaId}&chap=${targetChapter}`;
+      }
+    }
+
+    function updateNavButtons() {
+      const isFirst = currentChapterNum <= 1;
+      document.getElementById('prevBtnTop').classList.toggle('disabled', isFirst);
+      document.getElementById('prevBtnBottom').classList.toggle('disabled', isFirst);
+    }
+
+    function goBackToManhwa() {
+      window.location.href = `manhwa.html?id=${manhwaId}`;
+    }
+
+    function convertDriveLink(url) {
+      url = url.trim();
+      let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://lh3.googleusercontent.com/d/${match[1]}`;
+      }
+      return url;
+    }
+
+    function saveChapterImages() {
+      if (!isAdmin) return;
+      const inputVal = document.getElementById('chapterImagesInput').value;
+      const lines = inputVal.split('\n');
+      
+      let processedUrls = [];
+      lines.forEach(line => {
+        let cleaned = line.trim();
+        if (cleaned.length > 0) {
+          processedUrls.push(convertDriveLink(cleaned));
+        }
+      });
+
+      localStorage.setItem(`chap_imgs_${manhwaId}_${currentChapterNum}`, JSON.stringify(processedUrls));
+      alert(`تم حفظ صور الفصل ${currentChapterNum} بنجاح!`);
+      renderImages(processedUrls);
+    }
+
+    function renderImages(urls) {
+      const container = document.getElementById('readerImagesContainer');
+      container.innerHTML = '';
+
+      if (urls.length === 0) {
+        container.innerHTML = '<p style="color: #777; padding: 50px 0;">لا توجد صور مضافة لهذا الفصل حتى الآن.</p>';
+        return;
+      }
+
+      urls.forEach((url, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'img-wrapper';
+
+        const loadingText = document.createElement('div');
+        loadingText.className = 'img-loading-text';
+        loadingText.innerText = `جاري تحميل الصفحة (${index + 1}/${urls.length})...`;
+        wrapper.appendChild(loadingText);
+
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = `صفحة ${index + 1}`;
+        img.loading = 'lazy';
+
+        img.onload = function() {
+          loadingText.style.display = 'none';
+          img.style.opacity = '1';
+          wrapper.style.minHeight = 'auto';
+        };
+
+        img.onerror = function() {
+          loadingText.innerText = 'خطأ في تحميل الصورة (تأكد من صلاحيات الدرايف)';
+          loadingText.style.color = '#ff4d4d';
+        };
+
+        wrapper.appendChild(img);
+        container.appendChild(wrapper);
+      });
+    }
+
+    /* ==================== نظام التعليقات ==================== */
+    function getCommentsKey() {
+      return `comments_${manhwaId}_${currentChapterNum}`;
+    }
+
+    function timeAgo(timestamp) {
+      if (!timestamp) return 'منذ فترة';
+      const now = Date.now();
+      const seconds = Math.floor((now - timestamp) / 1000);
+
+      if (seconds < 60) return 'الآن';
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return `قبل ${minutes} دقيقة`;
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return `قبل ${hours} ساعة`;
+      const days = Math.floor(hours / 24);
+      if (days < 30) return `قبل ${days} يوم`;
+      const months = Math.floor(days / 30);
+      if (months < 12) return `قبل ${months} شهر`;
+      return `قبل ${Math.floor(months / 12)} سنة`;
+    }
+
+    function getCurrentUserInfo() {
+      if (userProfile) return userProfile;
+      if (isAdmin) return { name: 'Admin 🗿', avatar: 'https://via.placeholder.com/40/00f2fe/000000?text=Admin', bio: 'مدير الموقع' };
+      return null;
+    }
+
+    function loadComments() {
+      const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+      const container = document.getElementById('commentsList');
+      container.innerHTML = '';
+
+      if (comments.length === 0) {
+        container.innerHTML = '<p style="color: #666; font-size: 13px;">لا توجد تعليقات حتى الآن، كن أول من يعلق!</p>';
+        return;
+      }
+
+      const currentUser = getCurrentUserInfo();
+      const currentUserId = currentUser ? currentUser.name : 'guest';
+
+      comments.forEach((c, index) => {
+        const card = document.createElement('div');
+        card.className = 'comment-card';
+
+        const isLiked = c.likedBy && c.likedBy.includes(currentUserId);
+        const isOwner = currentUser && c.name === currentUser.name;
+
+        let repliesHTML = '';
+        if (c.replies && c.replies.length > 0) {
+          repliesHTML = '<div class="replies-container">';
+          c.replies.forEach((r, rIndex) => {
+            const isReplyOwner = currentUser && r.name === currentUser.name;
+            repliesHTML += `
+              <div class="reply-card">
+                <div class="comment-header">
+                  <img src="${r.avatar}" class="comment-avatar" style="width: 30px; height: 30px;" onerror="this.src='https://via.placeholder.com/30/8a2be2/ffffff?text=U'">
+                  <div class="comment-user-info">
+                    <span class="comment-username" style="font-size: 12px;">${r.name}</span>
+                    <span class="comment-user-bio" style="font-size: 10px;">${timeAgo(r.createdAt)} ${r.isEdited ? '(معدل)' : ''}</span>
+                  </div>
+                  ${isReplyOwner || isAdmin ? `
+                    <div class="owner-controls" style="font-size:11px;">
+                      <button class="action-btn" onclick="deleteReply(${index},${rIndex})">🗑️ حذف</button>
+                    </div>
+                  ` : ''}
+                </div>
+                <div class="comment-text" style="font-size: 12px; margin-bottom:0;">${r.text}</div>
+              </div>
+            `;
+          });
+          repliesHTML += '</div>';
+        }
+
+        card.innerHTML = `
+          <div class="comment-header">
+            <img src="${c.avatar}" class="comment-avatar" onerror="this.src='https://via.placeholder.com/40/8a2be2/ffffff?text=U'">
+            <div class="comment-user-info">
+              <span class="comment-username">${c.name}</span>
+              <span class="comment-user-bio">${c.bio || 'عاشق مانهوا 🗿'} • <span style="color:#00f2fe;">${timeAgo(c.createdAt)} ${c.isEdited ? '(معدل)' : ''}</span></span>
+            </div>
+
+            ${isOwner || isAdmin ? `
+              <div class="owner-controls">
+                <button class="action-btn" onclick="toggleEditBox(${index})">✏️ تعديل</button>
+                <button class="action-btn" onclick="deleteComment(${index})" style="color: #ff4d4d;">🗑️ حذف</button>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="comment-text" id="commentText_${index}">${c.text}</div>
+
+          <div class="edit-input-box" id="editBox_${index}">
+            <textarea id="editText_${index}">${c.text}</textarea>
+            <button class="action-btn" style="color: #00f2fe; margin-top:5px;" onclick="saveEditedComment(${index})">حفظ التعديل</button>
+          </div>
+
+          <div class="comment-actions">
+            <button class="action-btn" style="color: ${isLiked ? '#ff4d4d' : '#aaa'}; font-weight: ${isLiked ? 'bold' : 'normal'};" onclick="likeComment(${index})">
+              ${isLiked ? '❤️' : '🤍'} ${c.likes || 0} إعجاب
+            </button>
+            <button class="action-btn" onclick="toggleReplyBox(${index})">💬 رد</button>
+          </div>
+
+          <div class="reply-input-box" id="replyBox_${index}">
+            <textarea id="replyText_${index}" placeholder="اكتب ردك هنا..."></textarea>
+            <button class="action-btn" style="color: #00f2fe; margin-top:5px;" onclick="submitReply(${index})">إرسال الرد</button>
+          </div>
+
+          ${repliesHTML}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function submitComment() {
+      const currentUser = getCurrentUserInfo();
+      if (!currentUser) {
+        alert('يجب عليك تسجيل الدخول وإعداد بروفايلك أولاً حتى تتمكن من التعليق!');
+        return;
+      }
+
+      const text = document.getElementById('mainCommentInput').value.trim();
+      if (!text) {
+        alert('يرجى كتابة نص التعليق!');
+        return;
+      }
+
+      const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+      comments.unshift({
+        name: currentUser.name,
+        avatar: currentUser.avatar,
+        bio: currentUser.bio,
+        text: text,
+        likes: 0,
+        likedBy: [],
+        createdAt: Date.now(),
+        isEdited: false,
+        replies: []
+      });
+
+      localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+      document.getElementById('mainCommentInput').value = '';
+      loadComments();
+    }
+
+    function deleteComment(index) {
+      if (!confirm('هل أنت متأكد من حذف هذا التعليق؟')) return;
+      const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+      comments.splice(index, 1);
+      localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+      loadComments();
+    }
+
+    function toggleEditBox(index) {
+      const box = document.getElementById(`editBox_${index}`);
+      box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function saveEditedComment(index) {
+      const newText = document.getElementById(`editText_${index}`).value.trim();
+      if (!newText) {
+        alert('لا يمكن أن يكون التعليق فارغاً!');
+        return;
+      }
+
+      const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+      comments[index].text = newText;
+      comments[index].isEdited = true;
+
+      localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+      loadComments();
+    }
+
+    function likeComment(index) {
+      const currentUser = getCurrentUserInfo();
+      if (!currentUser) {
+        alert('يرجى تسجيل الدخول لتتمكن من إعطاء إعجاب!');
+        return;
+      }
+
+      const userId = currentUser.name;
+      const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+      const comment = comments[index];
+
+      if (!comment.likedBy) comment.likedBy = [];
+
+      const userIndex = comment.likedBy.indexOf(userId);
+      if (userIndex === -1) {
+        comment.likedBy.push(userId);
+        comment.likes = (comment.likes || 0) + 1;
+      } else {
+        comment.likedBy.splice(userIndex, 1);
+        comment.likes = Math.max(0, (comment.likes || 1) - 1);
+      }
+
+      localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+      loadComments();
+    }
+
+    function toggleReplyBox(index) {
+      const box = document.getElementById(`replyBox_${index}`);
+      box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function submitReply(commentIndex) {
+      const currentUser = getCurrentUserInfo();
+      if (!currentUser) {
+        alert('يجب عليك تسجيل الدخول لتتمكن من الرد!');
+        return;
+      }
+
+      const replyText = document.getElementById(`replyText_${commentIndex}`).value.trim();
+      if (!replyText) {
+        alert('يرجى كتابة الرد!');
+        return;
+      }
+
+      const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+      if (!comments[commentIndex].replies) {
+        comments[commentIndex].replies = [];
+      }
+
+      comments[commentIndex].replies.push({
+        name: currentUser.name,
+        avatar: currentUser.avatar,
+        bio: currentUser.bio,
+        text: replyText,
+        createdAt: Date.now(),
+        isEdited: false
+      });
+
+      localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+      loadComments();
+    }
+
+    function deleteReply(commentIndex, replyIndex) {
+      if (!confirm('هل أنت متأكد من حذف هذا الرد؟')) return;
+      const comments = JSON.parse(localStorage.getItem(getCommentsKey()) || '[]');
+      comments[commentIndex].replies.splice(replyIndex, 1);
+      localStorage.setItem(getCommentsKey(), JSON.stringify(comments));
+      loadComments();
+    }
+  </script>
+</body>
+</html>

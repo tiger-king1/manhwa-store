@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول / حساب جديد - موقع المانهوا</title>
+  <style>
+    body {
+      background-color: #0d0f17;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .auth-container {
+      background: #161926;
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid #8a2be2;
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .auth-title {
+      color: #00f2fe;
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #333;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      padding: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      width: 50%;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .tab-btn.active {
+      color: #00f2fe;
+      border-bottom: 2px solid #00f2fe;
+      margin-bottom: -2px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 5px;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      background: #0d0f17;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      box-sizing: border-box;
+      outline: none;
+      font-size: 13px;
+    }
+    .form-group textarea {
+      height: 60px;
+      resize: none;
+    }
+    .auth-btn {
+      background: #8a2be2;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      font-size: 14px;
+      margin-top: 10px;
+      transition: 0.2s;
+    }
+    .auth-btn:hover {
+      background: #00f2fe;
+      color: #000;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .back-link:hover {
+      color: #00f2fe;
+    }
+    .form-section {
+      display: none;
+    }
+    .form-section.active {
+      display: block;
+    }
+    .rule-hint {
+      color: #777;
+      font-size: 10px;
+      margin-top: 3px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <div class="auth-title">بوابة الحسابات 🗿🔥</div>
+
+    <!-- أزرار التنقل -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">تسجيل الدخول</button>
+      <button class="tab-btn" onclick="switchTab('register')">إنشاء حساب جديد</button>
+    </div>
+
+    <!-- نموذج تسجيل الدخول -->
+    <div id="loginSection" class="form-section active">
+      <div class="form-group">
+        <label>اسم المستخدم (Username)</label>
+        <input type="text" id="loginUsername" placeholder="Username (English)">
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="auth-btn" onclick="handleLogin()">دخول للموقع</button>
+    </div>
+
+    <!-- نموذج إنشاء حساب جديد -->
+    <div id="registerSection" class="form-section">
+      <div class="form-group">
+        <label>اسم المستخدم (Username)</label>
+        <input type="text" id="regUsername" placeholder="مثال: Andrew_99">
+        <span class="rule-hint">أحرف إنجليزية وأرقام فقط (بدون مسافات)</span>
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="regPassword" placeholder="••••••••">
+        <span class="rule-hint">8 أحرف أو أكثر (باللغة الإنجليزية)</span>
+      </div>
+      <div class="form-group">
+        <label>رابط صورة الآفاتار (اختياري)</label>
+        <input type="text" id="regAvatar" placeholder="رابط صورة درايف أو مباشر">
+      </div>
+      <div class="form-group">
+        <label>نبذة تعريفية (Bio - اختياري)</label>
+        <textarea id="regBio" placeholder="اكتب وصف قصير عنك..."></textarea>
+      </div>
+      <button class="auth-btn" onclick="handleRegister()">إنشاء الحساب الآن</button>
+    </div>
+
+    <a href="index.html" class="back-link">← العودة إلى الرئيسية</a>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      const loginSec = document.getElementById('loginSection');
+      const regSec = document.getElementById('registerSection');
+      const btns = document.querySelectorAll('.tab-btn');
+
+      btns.forEach(b => b.classList.remove('active'));
+
+      if (tab === 'login') {
+        loginSec.classList.add('active');
+        regSec.classList.remove('active');
+        btns[0].classList.add('active');
+      } else {
+        loginSec.classList.remove('active');
+        regSec.classList.add('active');
+        btns[1].classList.add('active');
+      }
+    }
+
+    function convertDriveLink(url) {
+      url = url.trim();
+      let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://lh3.googleusercontent.com/d/${match[1]}`;
+      }
+      return url;
+    }
+
+    function getAllUsers() {
+      return JSON.parse(localStorage.getItem('allUsersDatabase') || '[]');
+    }
+
+    function handleRegister() {
+      const username = document.getElementById('regUsername').value.trim();
+      const password = document.getElementById('regPassword').value.trim();
+      let avatar = document.getElementById('regAvatar').value.trim();
+      const bio = document.getElementById('regBio').value.trim();
+
+      // 1. التحقق من اسم المستخدم (إنجليزي وأرقام و _ فقط)
+      const usernameRegex = /^[a-zA-Z0-9_]+$/;
+      if (!usernameRegex.test(username)) {
+        alert('❌ اسم المستخدم يجب أن يكون باللغة الإنجليزية فقط ولا يحتوي على مسافات أو رموز خاصة!');
+        return;
+      }
+
+      // 2. التحقق من كلمة المرور (إنجليزي/أرقام و8 أحرف على الأقل)
+      const passwordRegex = /^[a-zA-Z0-9!@#$\%^&*()_+=-]+$/;
+      if (password.length < 8) {
+        alert('❌ كلمة المرور يجب أن تكون 8 أحرف على الأقل!');
+        return;
+      }
+      if (!passwordRegex.test(password)) {
+        alert('❌ كلمة المرور يجب أن تكون باللغة الإنجليزية فقط!');
+        return;
+      }
+
+      // 3. حظر اسم admin
+      if (username.toLowerCase() === 'admin') {
+        alert('❌ هذا الاسم محجوز للأدمن الرئيسي!');
+        return;
+      }
+
+      let users = getAllUsers();
+
+      // 4. فحص التكرار
+      const userExists = users.some(u => u.username.toLowerCase() === username.toLowerCase());
+      if (userExists) {
+        alert('❌ اسم المستخدم هذا مستخدم مسبقاً، اختر اسماً آخر!');
+        return;
+      }
+
+      if (avatar) {
+        avatar = convertDriveLink(avatar);
+      } else {
+        avatar = 'https://via.placeholder.com/100/8a2be2/ffffff?text=' + username.charAt(0).toUpperCase();
+      }
+
+      const newUser = {
+        username: username,
+        password: password,
+        name: username,
+        avatar: avatar,
+        bio: bio || 'عاشق مانهوا 🗿'
+      };
+
+      users.push(newUser);
+      localStorage.setItem('allUsersDatabase', JSON.stringify(users));
+
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userProfile', JSON.stringify(newUser));
+
+      alert('✨ تم إنشاء الحساب بنجاح!');
+      window.location.href = 'index.html';
+    }
+
+    function handleLogin() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      if (!username || !password) {
+        alert('يرجى إدخال اسم المستخدم وكلمة المرور!');
+        return;
+      }
+
+      // الأدمن الرئيسي بكلمة المرور htibss41
+      if (username.toLowerCase() === 'admin' && password === 'htibss41') {
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userProfile', JSON.stringify({
+          username: 'admin',
+          name: 'Admin 🗿',
+          avatar: 'https://via.placeholder.com/100/00f2fe/000000?text=Admin',
+          bio: 'مدير الموقع الأسطوري'
+        }));
+        alert('أهلاً بك يا أدمن!');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      let users = getAllUsers();
+      const foundUser = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+
+      if (foundUser) {
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userProfile', JSON.stringify(foundUser));
+        alert(`أهلاً بك مجدداً يا ${foundUser.name}! 🚀`);
+        window.location.href = 'index.html';
+      } else {
+        alert('❌ اسم المستخدم أو كلمة المرور غير صحيحة!');
+      }
+    }
+  </script>
+</body>
+</html>
