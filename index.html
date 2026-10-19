@@ -2,367 +2,518 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>موقع المانهوا الاحترافي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Manhwa Store Ultimate Edition 🗿🔥</title>
   <style>
+    :root {
+      --bg-color: #0d0f17;
+      --card-bg: #161926;
+      --text-color: #fff;
+      --text-muted: #b0c4de;
+      --border-color: #333;
+      --header-bg: #161926;
+      --accent: #8a2be2;
+      --accent-glow: #00f2fe;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f5f6fa;
+      --card-bg: #ffffff;
+      --text-color: #2f3640;
+      --text-muted: #57606f;
+      --border-color: #dcdde1;
+      --header-bg: #ffffff;
+      --accent: #6c5ce7;
+      --accent-glow: #0984e3;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      background-color: #0d0f17;
-      color: #fff;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       margin: 0;
       padding: 0;
       font-family: sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+      transition: background-color 0.3s, color 0.3s;
     }
     
     header {
-      background: #161926;
-      padding: 12px 20px;
+      background: var(--header-bg);
+      padding: 10px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #8a2be2;
-      position: relative;
-    }
-    
-    .logo {
-      color: #00f2fe;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    /* زر تسجيل الدخول للزوار */
-    .login-nav-btn {
-      background: #8a2be2;
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 20px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: bold;
-      transition: 0.2s;
-    }
-    .login-nav-btn:hover {
-      background: #00f2fe;
-      color: #000;
-    }
-
-    /* صورة الملف الشخصي (Avatar) في الهيدر */
-    .user-avatar-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid #8a2be2;
-      cursor: pointer;
-      object-fit: cover;
-      display: none; /* تظهر بالـ JS بعد تسجيل الدخول */
-      transition: 0.2s;
-    }
-    .user-avatar-btn:hover {
-      border-color: #00f2fe;
-      transform: scale(1.05);
-    }
-
-    /* نافذة البروفايل المنسدلة */
-    .profile-modal {
-      position: absolute;
-      top: 60px;
-      left: 15px;
-      background: #161926;
-      border: 1px solid #8a2be2;
-      border-radius: 12px;
-      padding: 15px;
-      width: 250px;
-      display: none;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      border-bottom: 2px solid var(--accent);
+      position: sticky;
+      top: 0;
       z-index: 1000;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
-    .profile-modal h4 {
-      margin: 0 0 10px 0;
-      color: #00f2fe;
-      font-size: 15px;
-      text-align: center;
+
+    .header-right-side { display: flex; align-items: center; gap: 8px; }
+    .menu-toggler { background: none; border: none; color: var(--text-color); font-size: 22px; cursor: pointer; padding: 0; }
+    .logo { color: var(--accent-glow); font-size: 16px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+
+    /* تصغير وتنسيق أيقونات الهيدر بدقة */
+    .header-icons { display: flex; align-items: center; gap: 6px; }
+    .icon-btn {
+      background: none; border: 1.5px solid var(--accent); color: var(--text-color);
+      border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 13px;
+      display: flex; align-items: center; justify-content: center; transition: 0.2s; position: relative; flex-shrink: 0;
     }
+    .icon-btn:hover { background: var(--accent); color: #fff; }
+    
+    .badge-count {
+      position: absolute; top: -3px; right: -3px; background: #ff4d4d; color: #fff;
+      font-size: 9px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;
+    }
+
+    .side-drawer {
+      height: 100%; width: 0; position: fixed; z-index: 9999; top: 0; right: 0;
+      background-color: var(--header-bg); overflow-x: hidden; transition: 0.3s;
+      padding-top: 60px; box-shadow: -5px 0 15px rgba(0,0,0,0.5); border-left: 2px solid var(--accent);
+    }
+    .side-drawer a {
+      padding: 16px 25px; text-decoration: none; font-size: 18px; color: var(--text-color);
+      display: block; transition: 0.2s; border-bottom: 1px solid var(--border-color); background: none; width: 100%; text-align: right; font-weight: bold;
+    }
+    .side-drawer a:hover { background-color: rgba(138, 43, 226, 0.15); color: var(--accent-glow); }
+    .side-drawer .close-btn { position: absolute; top: 12px; left: 20px; font-size: 34px; border: none; background: none; color: var(--text-color); cursor: pointer; }
+
+    .login-nav-btn {
+      background: var(--accent); color: #fff; padding: 5px 10px; border-radius: 20px;
+      text-decoration: none; font-size: 11px; font-weight: bold; transition: 0.2s; white-space: nowrap;
+    }
+    .login-nav-btn:hover { background: var(--accent-glow); color: #000; }
+
+    /* حجم الآفاتار المضبوط بالهيدر */
+    .user-avatar-btn {
+      width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--accent);
+      cursor: pointer; object-fit: cover; display: none; transition: 0.2s; flex-shrink: 0;
+    }
+    .user-avatar-btn:hover { border-color: var(--accent-glow); transform: scale(1.05); }
+
+    .profile-modal {
+      position: absolute; top: 55px; left: 10px; background: var(--card-bg);
+      border: 2px solid var(--accent); border-radius: 12px; padding: 15px;
+      width: 270px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.7); z-index: 1000;
+    }
+    .profile-modal h4 { margin: 0 0 10px 0; color: var(--accent-glow); font-size: 15px; text-align: center; }
     .profile-modal input, .profile-modal textarea {
-      width: 100%;
-      background: #0d0f17;
-      border: 1px solid #333;
-      color: #fff;
-      padding: 8px;
-      border-radius: 6px;
-      margin-bottom: 8px;
-      box-sizing: border-box;
-      font-size: 12px;
-      outline: none;
+      width: 100%; background: var(--bg-color); border: 2px solid var(--border-color); color: var(--text-color);
+      padding: 9px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; outline: none;
     }
-    .profile-modal textarea {
-      height: 50px;
-      resize: none;
-    }
-    .profile-modal button {
-      width: 100%;
-      background: #8a2be2;
-      color: #fff;
-      border: none;
-      padding: 6px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 12px;
-      margin-top: 4px;
+    .profile-modal textarea { height: 45px; resize: none; }
+    .stats-box {
+      background: rgba(138,43,226,0.15); border: 1px solid var(--accent); padding: 8px;
+      border-radius: 8px; font-size: 11px; margin-bottom: 10px; color: var(--text-muted); text-align: center; font-weight: bold;
     }
 
-    /* الدائرة العائمة للأدمن بجانب الشاشة */
-    .admin-floating-btn {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #8a2be2, #00f2fe);
-      color: #fff;
-      display: none; /* تظهر فقط للأدمن */
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      z-index: 999;
-      transition: transform 0.2s;
+    .notifications-modal {
+      position: absolute; top: 55px; left: 35px; background: var(--card-bg);
+      border: 2px solid var(--accent-glow); border-radius: 12px; padding: 15px;
+      width: 260px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.7); z-index: 1000; max-height: 250px; overflow-y: auto;
     }
-    .admin-floating-btn:hover {
-      transform: scale(1.1);
+    .notification-item { font-size: 11px; padding: 8px 0; border-bottom: 1px solid var(--border-color); color: #eee; font-weight: bold; }
+
+    .hero-slider {
+      width: 100%; max-width: 960px; margin: 15px auto; height: 210px; border-radius: 12px;
+      overflow: hidden; position: relative; background: var(--card-bg); border: 2px solid var(--accent); box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    .hero-slide { position: absolute; top: 0; right: 0; width: 100%; height: 100%; display: flex; opacity: 0; transition: opacity 0.8s ease-in-out; }
+    .hero-slide.active { opacity: 1; }
+    .hero-img { width: 45%; height: 100%; object-fit: cover; flex-shrink: 0; }
+    .hero-content { width: 55%; padding: 15px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(to left, var(--card-bg), transparent); }
+    .hero-title { font-size: 16px; font-weight: bold; color: var(--accent-glow); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hero-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: bold; line-height: 1.4; }
+
+    .continue-reading-bar {
+      width: 100%; max-width: 960px; margin: 0 auto 15px auto; background: linear-gradient(135deg, rgba(138,43,226,0.2), rgba(0,242,254,0.2));
+      border: 2px solid var(--accent); padding: 10px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;
     }
 
+    .genres-container { width: 100%; max-width: 960px; margin: 0 auto 15px auto; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+    .genres-container::-webkit-scrollbar { display: none; }
+    .genre-chip {
+      background: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-color);
+      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; flex-shrink: 0;
+    }
+    .genre-chip:hover, .genre-chip.active { background: var(--accent); border-color: var(--accent-glow); color: #fff; }
+
+    .top-actions-bar {
+      width: 100%; max-width: 960px; margin: 0 auto 15px auto; display: flex; gap: 8px; align-items: center;
+    }
     .search-box {
-      width: 100%;
-      max-width: 600px;
-      margin: 20px auto;
-      display: block;
-      padding: 12px 15px;
-      background: #161926;
-      border: 1px solid #8a2be2;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 15px;
-      outline: none;
-      box-sizing: border-box;
+      flex: 1; padding: 10px 14px; background: var(--card-bg); border: 2px solid var(--accent);
+      border-radius: 10px; color: var(--text-color); font-size: 13px; font-weight: bold; outline: none;
+    }
+    .random-btn {
+      background: linear-gradient(135deg, #00f2fe, var(--accent)); color: #000; border: none;
+      padding: 10px 14px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 12px; white-space: nowrap; flex-shrink: 0;
     }
 
-    .container {
-      max-width: 1000px;
-      margin: 20px auto;
-      padding: 0 15px;
-    }
+    .container { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 12px; }
+    .section-title { color: var(--accent-glow); font-size: 17px; font-weight: bold; margin-bottom: 12px; border-bottom: 3px solid var(--accent); padding-bottom: 4px; display: inline-block; }
 
-    .section-title {
-      color: #00f2fe;
-      font-size: 18px;
-      margin-bottom: 15px;
-      border-bottom: 2px solid #8a2be2;
-      padding-bottom: 5px;
-      display: inline-block;
-    }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 30px; }
+    @media(min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; } }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
-    }
+    .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 2px solid var(--border-color); transition: 0.2s; position: relative; cursor: pointer; }
+    .card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .card-body { padding: 9px; }
+    .card-title { font-size: 13px; font-weight: bold; margin-bottom: 5px; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-rating { font-size: 11px; font-weight: bold; color: #f1c40f; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
 
-    .card {
-      background: #161926;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid #333;
-      transition: 0.2s;
-      position: relative;
-    }
-    .card:hover {
-      border-color: #8a2be2;
-      transform: translateY(-3px);
-    }
-    .card img {
-      width: 100%;
-      height: 240px;
-      object-fit: cover;
-      display: block;
-    }
-    .card-body {
-      padding: 10px;
-    }
-    .card-title {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .status-badge { font-size: 9px; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
+    .status-ongoing { background: rgba(0, 255, 100, 0.2); color: #00ff66; border: 1px solid rgba(0, 255, 100, 0.4); }
+    .status-completed { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.4); }
 
-    .btn {
-      background: #8a2be2;
-      color: #fff;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 12px;
-      width: 100%;
-      text-align: center;
-      text-decoration: none;
-      display: block;
-      box-sizing: border-box;
-    }
-    .btn:hover {
-      background: #00f2fe;
-      color: #000;
-    }
+    .card-genre-tag { font-size: 10px; font-weight: bold; background: rgba(138,43,226,0.25); color: var(--accent-glow); padding: 2px 5px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+
+    .btn { background: var(--accent); color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px; width: 100%; text-align: center; text-decoration: none; display: block; transition: 0.2s; }
+    .btn:hover { background: var(--accent-glow); color: #000; }
 
     .fav-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(0,0,0,0.6);
-      border: none;
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
+      position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75);
+      border: none; color: #fff; font-size: 16px; cursor: pointer; border-radius: 50%;
+      width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; z-index: 2;
     }
-    .fav-btn.active {
-      color: #ff4d4d;
+    .fav-btn.active { color: #ff4d4d; }
+
+    .delete-card-btn {
+      position: absolute; top: 8px; right: 8px; background: rgba(255, 77, 77, 0.95);
+      border: none; color: #fff; font-size: 12px; cursor: pointer; border-radius: 50%;
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; z-index: 5;
+    }
+    .delete-card-btn:hover { background: #ff0000; }
+
+    #detailsView { display: none; margin-top: 15px; }
+    .details-hero { display: flex; gap: 15px; background: var(--card-bg); padding: 15px; border-radius: 12px; border: 2px solid var(--border-color); align-items: flex-start; }
+    @media(max-width: 600px) { .details-hero { flex-direction: column; align-items: center; text-align: center; } }
+    .details-img { width: 140px; height: 200px; object-fit: cover; border-radius: 8px; border: 2px solid var(--accent); flex-shrink: 0; }
+    .details-info { flex: 1; width: 100%; }
+    .details-title { font-size: 18px; font-weight: bold; color: var(--accent-glow); margin-bottom: 8px; }
+    .details-genre { background: rgba(138,43,226,0.25); color: var(--accent-glow); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; display: inline-block; margin-bottom: 8px; }
+    .details-desc { font-size: 13px; font-weight: bold; color: #ddd; line-height: 1.5; margin-bottom: 12px; }
+    .rating-box { font-size: 13px; font-weight: bold; color: #f1c40f; margin-bottom: 12px; }
+    .star-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 2px; }
+
+    .chapters-section { margin-top: 25px; }
+    .chapters-title { font-size: 17px; font-weight: bold; color: var(--accent-glow); margin-bottom: 12px; border-bottom: 3px solid var(--accent); padding-bottom: 4px; display: inline-block; }
+    .chapters-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    @media(min-width: 600px) { .chapters-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); } }
+    .chapter-card {
+      background: var(--card-bg); border: 2px solid var(--border-color); color: #fff;
+      padding: 10px 6px; text-align: center; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; transition: 0.2s;
+    }
+    .chapter-card:hover { background: var(--accent); border-color: var(--accent-glow); }
+
+    .admin-floating-btn {
+      position: fixed; bottom: 75px; right: 15px; width: 45px; height: 45px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-glow)); color: #fff; display: none;
+      align-items: center; justify-content: center; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); z-index: 999;
+    }
+    .admin-chat-floating-btn {
+      position: fixed; bottom: 75px; left: 15px; width: 45px; height: 45px; border-radius: 50%;
+      background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; display: none;
+      align-items: center; justify-content: center; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); z-index: 999; text-decoration: none;
+    }
+    #backToTop {
+      position: fixed; bottom: 15px; right: 15px; background-color: var(--accent); color: white;
+      border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 18px; cursor: pointer;
+      display: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); z-index: 998; align-items: center; justify-content: center;
     }
 
-    /* نافذة إضافة المانهوا المنبثقة للأدمن */
-    .admin-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
+    #toastNotification {
+      position: fixed; bottom: -70px; left: 50%; transform: translateX(-50%); background: #161926;
+      border: 2px solid var(--accent-glow); color: #fff; padding: 8px 16px; border-radius: 30px;
+      font-size: 12px; font-weight: bold; box-shadow: 0 5px 20px rgba(0,0,0,0.6); transition: bottom 0.3s ease-in-out; z-index: 9999; display: flex; align-items: center; gap: 6px; white-space: nowrap;
     }
-    .admin-modal-content {
-      background: #161926;
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid #8a2be2;
-      width: 90%;
-      max-width: 450px;
-    }
-    .admin-modal-content input {
-      width: 100%;
-      background: #0d0f17;
-      border: 1px solid #333;
-      color: #fff;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      box-sizing: border-box;
-      outline: none;
+    #toastNotification.show { bottom: 20px; }
+
+    .admin-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px; }
+    .admin-modal-content { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 2px solid var(--accent); width: 100%; max-width: 380px; }
+    .admin-modal-content input, .admin-modal-content select, .admin-modal-content textarea {
+      width: 100%; background: var(--bg-color); border: 2px solid var(--border-color); color: var(--text-color);
+      padding: 9px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; font-weight: bold; outline: none;
     }
   </style>
 </head>
-<body>
+<body data-theme="dark">
+
+  <div id="toastNotification">✨ <span id="toastText">تمت العملية بنجاح</span></div>
 
   <header>
-    <div class="logo">Manhwa Store 🗿🔥</div>
+    <div class="header-right-side">
+      <button class="menu-toggler" onclick="toggleNavMenu()">☰</button>
+      <div class="logo" onclick="goHome()">Manhwa Store 🗿🔥</div>
+    </div>
     
-    <!-- زر تسجيل الدخول (يظهر فقط غير المسجلين) -->
-    <a href="login.html" id="loginBtnNav" class="login-nav-btn">تسجيل الدخول</a>
+    <div class="header-icons">
+      <button class="icon-btn" onclick="toggleNotificationsModal()" title="الإشعارات">
+        🔔 <span class="badge-count" id="notifBadge">1</span>
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="تغيير المظهر">🌙</button>
+      <a href="login.html" id="loginBtnNav" class="login-nav-btn">دخول</a>
+      <img id="userAvatarBtn" class="user-avatar-btn" src="" alt="Profile" onclick="toggleProfileModal()">
+    </div>
 
-    <!-- صورة الآفاتار (تظهر فقط عند تسجيل الدخول) -->
-    <img id="userAvatarBtn" class="user-avatar-btn" src="" alt="Profile" onclick="toggleProfileModal()">
+    <div id="notificationsModal" class="notifications-modal">
+      <h4 style="color:var(--accent-glow); margin:0 0 8px 0; font-size:13px; border-bottom:2px solid var(--accent); padding-bottom:4px;">التنبيهات الفورية 🔔</h4>
+      <div class="notification-item">✨ تم تصغير الأيقونات وضبط الهيدر تماماً!</div>
+    </div>
 
-    <!-- نافذة تعديل البروفايل الشخصي -->
     <div id="profileModal" class="profile-modal">
       <h4>الملف الشخصي 👤</h4>
+      <div class="stats-box" id="userStatsBox">عدد المفضلات: 0 أعمال</div>
       <input type="text" id="profileNameInput" placeholder="الاسم الشخصي">
       <input type="text" id="profileAvatarInput" placeholder="رابط صورة الآفاتار">
       <textarea id="profileBioInput" placeholder="اكتب وصف قصير (Bio)..."></textarea>
       <button onclick="saveUserProfile()">حفظ البيانات</button>
-      <button onclick="logoutUser()" style="background: #ff4d4d; margin-top: 8px;">تسجيل الخروج</button>
+      
+      <div style="display:flex; gap:5px; margin-top:8px;">
+        <button onclick="exportBackup()" style="background:#00f2fe; color:#000; border:none; padding:5px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:50%;">تصدير 💾</button>
+        <button onclick="logoutUser()" style="background: #ff4d4d; border:none; padding:5px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; width:50%;">خروج 🚪</button>
+      </div>
     </div>
   </header>
 
-  <!-- الدائرة العائمة للأدمن بجانب الشاشة (تظهر للأدمن فقط) -->
-  <div id="adminFloatingBtn" class="admin-floating-btn" onclick="openAdminModal()" title="إضافة مانهوا">⚙️</div>
+  <div id="mySideMenu" class="side-drawer">
+    <button class="close-btn" onclick="toggleNavMenu()">&times;</button>
+    <a href="#" onclick="toggleNavMenu(); goHome();">🏠 الرئيسية</a>
+    <a href="#" onclick="toggleNavMenu(); scrollToFavorites();">⭐ المفضلة</a>
+    <a href="login.html">🔐 تسجيل  / دخول</a>
+  </div>
 
-  <!-- النافذة المنبثقة لإضافة مانهوا للأدمن -->
+  <div id="adminFloatingBtn" class="admin-floating-btn" onclick="openAdminModal()" title="إضافة مانهوا">⚙️</div>
+  <a id="adminChatBtn" href="admin-chat.html" class="admin-chat-floating-btn" title="شات الأدمن">💬</a>
+  <button id="backToTop" onclick="scrollToTop()" title="العودة للأعلى">⬆</button>
+
   <div id="adminModalOverlay" class="admin-modal-overlay">
     <div class="admin-modal-content">
-      <h3 style="color: #00f2fe; margin-top:0;">🔒 لوحة الأدمن: إضافة مانهوا</h3>
+      <h3 id="adminModalTitle" style="color: var(--accent-glow); margin-top:0; font-size:16px;">🔒 لوحة الأدمن: إضافة مانهوا</h3>
+      <input type="hidden" id="editManhwaId" value="">
       <input type="text" id="newTitle" placeholder="اسم المانهوا">
-      <input type="text" id="newCover" placeholder="رابط صورة الغلاف (درايف أو مباشر)">
-      <button onclick="addNewManhwa()" class="btn" style="margin-bottom: 8px;">إضافة المانهوا</button>
-      <button onclick="closeAdminModal()" class="btn" style="background: #444;">إلغاء</button>
+      <input type="text" id="newCover" placeholder="رابط صورة الغلاف">
+      <textarea id="newDesc" placeholder="قصة أو وصف المانهوا..." style="height: 50px;"></textarea>
+      
+      <label style="font-size:11px; font-weight:bold; color:var(--text-muted);">اختر التصنيف:</label>
+      <select id="newGenreSelect"></select>
+
+      <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+        <input type="text" id="customGenreInput" placeholder="أو أضف تصنيف جديد..." style="margin-bottom:0;">
+        <button onclick="addNewGenre()" class="btn" style="width: 80px;">إضافة</button>
+      </div>
+
+      <button id="adminSaveBtn" onclick="saveManhwaData()" class="btn" style="margin-bottom: 6px; font-size:13px; padding:9px;">إضافة المانهوا للموقع</button>
+      <button onclick="closeAdminModal()" class="btn" style="background: #444; font-size:12px;">إلغاء</button>
     </div>
   </div>
 
-  <div class="container">
-    <!-- شريط البحث الفوري الذكي -->
-    <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن مانهوا فوراً..." oninput="filterManhwas()">
+  <div id="homeView">
+    <div class="hero-slider" id="heroSlider"></div>
 
-    <!-- قسم المفضلة -->
-    <div id="favoritesSection" style="display:none;">
-      <div class="section-title">⭐ المفضلة لديك</div>
-      <div class="grid" id="favoritesGrid"></div>
+    <div class="container">
+      <div id="continueReadingBar" style="display:none;" class="continue-reading-bar">
+        <div>
+          <span style="font-size: 11px; font-weight: bold; color: var(--text-muted); display: block;">أكمل القراءة من حيث توقفت:</span>
+          <strong id="lastReadTitle" style="color: var(--accent-glow); font-size: 13px;">اسم المانهوا</strong>
+        </div>
+        <a id="lastReadBtn" href="#" class="btn" style="width: auto; padding: 5px 12px; font-size: 11px;">متابعة 🚀</a>
+      </div>
+
+      <div class="genres-container" id="genresContainer"></div>
+
+      <div class="top-actions-bar">
+        <input type="text" id="searchInput" class="search-box" placeholder="ابحث بذكاء عن أي مانهوا..." oninput="filterManhwas()">
+        <button class="random-btn" onclick="openRandomManhwa()" title="عمل عشوائي">🎲 عشوائي</button>
+      </div>
+
+      <div id="favoritesSection" style="display:none;">
+        <div class="section-title">⭐ المفضلة لديك</div>
+        <div class="grid" id="favoritesGrid"></div>
+      </div>
+
+      <div class="section-title">📚 جميع المانهوات المتاحة</div>
+      <div class="grid" id="manhwasGrid"></div>
     </div>
-
-    <!-- قسم جميع المانهوات -->
-    <div class="section-title">📚 جميع المانهوات المتاحة</div>
-    <div class="grid" id="manhwasGrid"></div>
   </div>
+
+  <div id="detailsView" class="container"></div>
 
   <script>
     const userProfile = JSON.parse(localStorage.getItem('userProfile') || 'null');
-    // التحقق الصارم من صلاحيات الأدمن الحقيقي فقط
-    const isAdmin = localStorage.getItem('isLoggedIn') === 'true' && userProfile && (userProfile.username === 'admin' || userProfile.name.includes('Admin'));
+    const adminUsernames = ['Meio', 'admin 🗿', 'yhya', 'Admin'];
+    
+    const isAdmin = localStorage.getItem('isLoggedIn') === 'true' && userProfile && (
+      adminUsernames.includes(userProfile.username) || 
+      adminUsernames.includes(userProfile.name)
+    );
+
+    let currentGenreFilter = 'الكل';
 
     window.onload = function() {
+      initTheme();
       setupAuthUI();
-      loadManhwas();
+      loadDefaultDataIfNeeded();
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const detailId = urlParams.get('id');
+
+      if (detailId) {
+        showDetailsView(parseInt(detailId));
+      } else {
+        goHome();
+      }
     };
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastText').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('siteTheme') || 'dark';
+      document.body.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeBtn').innerHTML = savedTheme === 'dark' ? '🌙' : '☀️';
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtn = document.getElementById('themeBtn');
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeBtn.innerHTML = '☀️';
+        localStorage.setItem('siteTheme', 'light');
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '🌙';
+        localStorage.setItem('siteTheme', 'dark');
+      }
+    }
+
+    function toggleNotificationsModal() {
+      const m = document.getElementById('notificationsModal');
+      m.style.display = m.style.display === 'block' ? 'none' : 'block';
+      document.getElementById('notifBadge').style.display = 'none';
+    }
+
+    function loadDefaultDataIfNeeded() {
+      let genres = JSON.parse(localStorage.getItem('myGenres') || 'null');
+      if (!genres) {
+        genres = ['الكل', 'أكشن', 'رومنسي', 'إيسيكاي', 'نظام ومستوى'];
+        localStorage.setItem('myGenres', JSON.stringify(genres));
+      }
+
+      let manhwas = JSON.parse(localStorage.getItem('myManhwas') || '[]');
+      if (manhwas.length === 0) {
+        manhwas = [
+          { id: 1, title: "Omniscient Reader's Viewpoint", cover: "https://via.placeholder.com/180x240/1f2338/ffffff?text=ORV", genre: "نظام ومستوى", status: "مستمرة", desc: "قصة البطل الذي يقرأ رواية وتتحول لحقيقة.", rating: 4.9, ratingsCount: 15 },
+          { id: 2, title: "Solo Leveling", cover: "https://via.placeholder.com/180x240/1f2338/ffffff?text=Solo", genre: "أكشن", status: "منتهية", desc: "أضعف صياد يحصل على نظام تطور غامض.", rating: 5.0, ratingsCount: 30 },
+          { id: 3, title: "The Greatest Estate Developer", cover: "https://via.placeholder.com/180x240/1f2338/ffffff?text=Estate", genre: "إيسيكاي", status: "مستمرة", desc: "مهندس يتجسد في شخصية شرير ويبني الإمبراطوريات.", rating: 4.8, ratingsCount: 20 }
+        ];
+        localStorage.setItem('myManhwas', JSON.stringify(manhwas));
+      }
+    }
+
+    function getStoredGenres() { return JSON.parse(localStorage.getItem('myGenres') || '["الكل"]'); }
+
+    function renderGenresUI() {
+      const container = document.getElementById('genresContainer');
+      const select = document.getElementById('newGenreSelect');
+      const genres = getStoredGenres();
+
+      container.innerHTML = '';
+      select.innerHTML = '';
+
+      genres.forEach(genre => {
+        const chip = document.createElement('div');
+        chip.className = `genre-chip ${currentGenreFilter === genre ? 'active' : ''}`;
+        chip.innerText = genre === 'الكل' ? '🔥 الكل' : genre;
+        chip.onclick = () => filterByGenre(genre, chip);
+        container.appendChild(chip);
+
+        if (genre !== 'الكل') {
+          const opt = document.createElement('option');
+          opt.value = genre;
+          opt.innerText = genre;
+          select.appendChild(opt);
+        }
+      });
+    }
+
+    function addNewGenre() {
+      const customInput = document.getElementById('customGenreInput');
+      const newGenre = customInput.value.trim();
+      if (!newGenre) { showToast('اكتب اسم التصنيف الجديد!'); return; }
+
+      let genres = getStoredGenres();
+      if (genres.includes(newGenre)) { showToast('التصنيف موجود مسبقاً!'); return; }
+
+      genres.push(newGenre);
+      localStorage.setItem('myGenres', JSON.stringify(genres));
+      customInput.value = '';
+      renderGenresUI();
+      showToast(`تم إضافة التصنيف "${newGenre}" بنجاح! ✨`);
+    }
+
+    function toggleNavMenu() {
+      const menu = document.getElementById('mySideMenu');
+      menu.style.width = (menu.style.width === '260px') ? '0' : '260px';
+    }
+
+    function scrollToFavorites() {
+      const favSec = document.getElementById('favoritesSection');
+      if (favSec.style.display !== 'none') {
+        favSec.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        showToast('ليس لديك أي مانهوا في المفضلة حالياً!');
+      }
+    }
+
+    window.onscroll = function() {
+      const topBtn = document.getElementById('backToTop');
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        topBtn.style.display = 'flex';
+      } else {
+        topBtn.style.display = 'none';
+      }
+    };
+
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
     function setupAuthUI() {
       const loginBtn = document.getElementById('loginBtnNav');
       const avatarBtn = document.getElementById('userAvatarBtn');
       const adminBtn = document.getElementById('adminFloatingBtn');
+      const adminChatBtn = document.getElementById('adminChatBtn');
 
-      // تفعيل زر الأدمن فقط للأدمن الصريح
-      if (isAdmin) {
-        adminBtn.style.display = 'flex';
-      } else {
-        adminBtn.style.display = 'none';
+      if (isAdmin) { 
+        adminBtn.style.display = 'flex'; 
+        adminChatBtn.style.display = 'flex';
+      } else { 
+        adminBtn.style.display = 'none'; 
+        adminChatBtn.style.display = 'none';
       }
 
       const isUserLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
       if (isUserLoggedIn && userProfile) {
         loginBtn.style.display = 'none';
         avatarBtn.style.display = 'block';
-
-        const name = userProfile.name || 'مستخدم';
-        const avatar = userProfile.avatar || 'https://via.placeholder.com/100/8a2be2/ffffff?text=User';
-        const bio = userProfile.bio || '';
-
-        avatarBtn.src = avatar;
-        document.getElementById('profileNameInput').value = name;
-        document.getElementById('profileAvatarInput').value = avatar;
-        document.getElementById('profileBioInput').value = bio;
+        avatarBtn.src = userProfile.avatar || 'https://via.placeholder.com/100/8a2be2/ffffff?text=User';
+        document.getElementById('profileNameInput').value = userProfile.name || '';
+        document.getElementById('profileAvatarInput').value = userProfile.avatar || '';
+        document.getElementById('profileBioInput').value = userProfile.bio || '';
+        
+        const favCount = JSON.parse(localStorage.getItem('myFavorites') || '[]').length;
+        document.getElementById('userStatsBox').innerText = `📊 إحصائياتك: ${favCount} أعمال مفضلة`;
       } else {
         loginBtn.style.display = 'inline-block';
         avatarBtn.style.display = 'none';
@@ -378,19 +529,11 @@
       const name = document.getElementById('profileNameInput').value.trim();
       let avatar = document.getElementById('profileAvatarInput').value.trim();
       const bio = document.getElementById('profileBioInput').value.trim();
-
-      if (!name) {
-        alert('يرجى كتابة الاسم!');
-        return;
-      }
-
-      if (avatar.includes('drive.google.com')) {
-        avatar = convertDriveLink(avatar);
-      }
-
+      if (!name) { showToast('يرجى كتابة الاسم!'); return; }
+      if (avatar.includes('drive.google.com')) avatar = convertDriveLink(avatar);
       const updatedProfile = { ...userProfile, name, avatar, bio };
       localStorage.setItem('userProfile', JSON.stringify(updatedProfile));
-      alert('تم حفظ بيانات الملف الشخصي بنجاح! ✨');
+      showToast('تم حفظ الملف الشخصي بنجاح! ✨');
       location.reload();
     }
 
@@ -400,31 +543,181 @@
       window.location.reload();
     }
 
-    function openAdminModal() {
-      document.getElementById('adminModalOverlay').style.display = 'flex';
+    function exportBackup() {
+      const backupData = {
+        manhwas: localStorage.getItem('myManhwas'),
+        favorites: localStorage.getItem('myFavorites'),
+        genres: localStorage.getItem('myGenres')
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "manhwa_store_backup.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('تم تصدير نسخة الاحتياط بنجاح! 💾');
     }
 
-    function closeAdminModal() {
-      document.getElementById('adminModalOverlay').style.display = 'none';
+    function openAdminModal(editId = null) {
+      renderGenresUI();
+      const modalOverlay = document.getElementById('adminModalOverlay');
+      const modalTitle = document.getElementById('adminModalTitle');
+      const saveBtn = document.getElementById('adminSaveBtn');
+
+      if (editId) {
+        const manhwas = getStoredManhwas();
+        const m = manhwas.find(item => item.id === editId);
+        if (m) {
+          document.getElementById('editManhwaId').value = m.id;
+          document.getElementById('newTitle').value = m.title;
+          document.getElementById('newCover').value = m.cover;
+          document.getElementById('newDesc').value = m.desc || '';
+          document.getElementById('newGenreSelect').value = m.genre || 'أكشن';
+          modalTitle.innerText = '🔒 لوحة الأدمن: تعديل المانهوا';
+          saveBtn.innerText = 'حفظ التعديلات';
+        }
+      } else {
+        document.getElementById('editManhwaId').value = '';
+        document.getElementById('newTitle').value = '';
+        document.getElementById('newCover').value = '';
+        document.getElementById('newDesc').value = '';
+        modalTitle.innerText = '🔒 لوحة الأدمن: إضافة مانهوا';
+        saveBtn.innerText = 'إضافة المانهوا للموقع';
+      }
+      modalOverlay.style.display = 'flex';
     }
 
-    function getStoredManhwas() {
-      return JSON.parse(localStorage.getItem('myManhwas') || '[]');
-    }
+    function closeAdminModal() { document.getElementById('adminModalOverlay').style.display = 'none'; }
 
-    function getFavorites() {
-      return JSON.parse(localStorage.getItem('myFavorites') || '[]');
-    }
+    function getStoredManhwas() { return JSON.parse(localStorage.getItem('myManhwas') || '[]'); }
+    function getFavorites() { return JSON.parse(localStorage.getItem('myFavorites') || '[]'); }
 
     function loadManhwas() {
       const manhwas = getStoredManhwas();
       renderGrid(manhwas);
     }
 
+    function goHome() {
+      window.history.pushState({}, '', 'index.html');
+      document.getElementById('detailsView').style.display = 'none';
+      document.getElementById('homeView').style.display = 'block';
+      renderGenresUI();
+      loadManhwas();
+      setupHeroSlider();
+      setupContinueReading();
+    }
+
+    function openRandomManhwa() {
+      const manhwas = getStoredManhwas();
+      if (manhwas.length === 0) { showToast('لا توجد مانهوات متاحة!'); return; }
+      const randomItem = manhwas[Math.floor(Math.random() * manhwas.length)];
+      window.history.pushState({}, '', `index.html?id=${randomItem.id}`);
+      showDetailsView(randomItem.id);
+    }
+
+    function showDetailsView(id) {
+      document.getElementById('homeView').style.display = 'none';
+      const detailsContainer = document.getElementById('detailsView');
+      detailsContainer.style.display = 'block';
+
+      const manhwas = getStoredManhwas();
+      const manhwa = manhwas.find(m => m.id === id);
+
+      if (!manhwa) {
+        detailsContainer.innerHTML = '<h2 style="text-align:center; color:#ff4d4d;">العمل غير موجود!</h2><button class="btn" onclick="goHome()">العودة للرئيسية</button>';
+        return;
+      }
+
+      const avgRating = manhwa.rating ? manhwa.rating.toFixed(1) : '4.8';
+      const commentsCount = JSON.parse(localStorage.getItem(`comments_${manhwa.id}_1`) || '[]').length;
+
+      detailsContainer.innerHTML = `
+        <button class="btn" style="width:auto; padding:7px 14px; margin-bottom:15px; font-size:12px;" onclick="goHome()">← العودة للرئيسية</button>
+        <div class="details-hero">
+          <img src="${manhwa.cover}" class="details-img" alt="${manhwa.title}">
+          <div class="details-info">
+            <div class="details-title">${manhwa.title}</div>
+            <span class="details-genre">${manhwa.genre || 'عام'}</span>
+            <div class="rating-box">⭐ التقييم العام: <strong>${avgRating} / 5</strong> (${manhwa.ratingsCount || 1} صوت) • 💬 التعليقات: ${commentsCount}</div>
+            <div class="details-desc">${manhwa.desc || 'لا توجد قصة متاحة لهذا العمل حالياً.'}</div>
+            
+            <div style="margin-top: 10px;">
+              <span style="font-size:12px; font-weight:bold; color:#aaa; display:block; margin-bottom:5px;">قيم العمل الآن (مرة واحدة فقط):</span>
+              <div id="starButtonsContainer">
+                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 1)">⭐</button>
+                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 2)">⭐</button>
+                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 3)">⭐</button>
+                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 4)">⭐</button>
+                <button class="star-btn" onclick="rateManhwa(${manhwa.id}, 5)">⭐</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chapters-section">
+          <div class="chapters-title">📖 قائمة الفصول المتاحة</div>
+          <div class="chapters-grid">
+            <a href="manhwa.html?id=${manhwa.id}&chap=1" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 1)">الفصل 1</a>
+            <a href="manhwa.html?id=${manhwa.id}&chap=2" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 2)">الفصل 2</a>
+            <a href="manhwa.html?id=${manhwa.id}&chap=3" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 3)">الفصل 3</a>
+            <a href="manhwa.html?id=${manhwa.id}&chap=4" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 4)">الفصل 4</a>
+            <a href="manhwa.html?id=${manhwa.id}&chap=5" class="chapter-card" onclick="saveLastRead('${manhwa.title}', ${manhwa.id}, 5)">الفصل 5</a>
+          </div>
+        </div>
+      `;
+      
+      const ratedList = JSON.parse(localStorage.getItem('userRatedManhwas') || '[]');
+      if (ratedList.includes(id)) {
+        document.getElementById('starButtonsContainer').innerHTML = '<span style="color:#00f2fe; font-size:12px; font-weight:bold;">✨ لقد قمت بتقييم هذا العمل مسبقاً.</span>';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function rateManhwa(id, stars) {
+      let ratedList = JSON.parse(localStorage.getItem('userRatedManhwas') || '[]');
+      if (ratedList.includes(id)) {
+        showToast('عذراً، يمكنك تقييم العمل مرة واحدة فقط!');
+        return;
+      }
+
+      let manhwas = JSON.parse(localStorage.getItem('myManhwas') || '[]');
+      let manhwa = manhwas.find(m => m.id === id);
+      if (!manhwa) return;
+
+      let currentRating = manhwa.rating || 5.0;
+      let count = manhwa.ratingsCount || 1;
+      let newTotal = (currentRating * count) + stars;
+      count += 1;
+      manhwa.rating = newTotal / count;
+      manhwa.ratingsCount = count;
+
+      localStorage.setItem('myManhwas', JSON.stringify(manhwas));
+      
+      ratedList.push(id);
+      localStorage.setItem('userRatedManhwas', JSON.stringify(ratedList));
+
+      showToast(`شكراً لتقييمك! تم تسجيل ${stars} نجوم ⭐`);
+      showDetailsView(id);
+    }
+
+    function filterByGenre(genre, element) {
+      currentGenreFilter = genre;
+      document.querySelectorAll('.genre-chip').forEach(chip => chip.classList.remove('active'));
+      if(element) element.classList.add('active');
+      filterManhwas();
+    }
+
     function filterManhwas() {
       const query = document.getElementById('searchInput').value.toLowerCase();
-      const manhwas = getStoredManhwas();
-      const filtered = manhwas.filter(m => m.title.toLowerCase().includes(query));
+      let manhwas = getStoredManhwas();
+
+      if (currentGenreFilter !== 'الكل') {
+        manhwas = manhwas.filter(m => m.genre === currentGenreFilter);
+      }
+
+      const filtered = manhwas.filter(m => m.title.toLowerCase().includes(query) || (m.genre && m.genre.toLowerCase().includes(query)));
       renderGrid(filtered);
     }
 
@@ -438,7 +731,7 @@
       favGrid.innerHTML = '';
 
       if (list.length === 0) {
-        grid.innerHTML = '<p style="color:#777;">لا توجد مانهوات مطابقة للبحث.</p>';
+        grid.innerHTML = '<p style="color:#777; font-size:13px; font-weight:bold;">لا توجد مانهوات مطابقة.</p>';
         favSection.style.display = 'none';
         return;
       }
@@ -457,59 +750,162 @@
     function createCard(m, isFav) {
       const card = document.createElement('div');
       card.className = 'card';
+      const ratingVal = m.rating ? m.rating.toFixed(1) : '4.8';
+      const genre = m.genre || 'عام';
+      const status = m.status || 'مستمرة';
+      const statusClass = status === 'منتهية' ? 'status-completed' : 'status-ongoing';
       
+      const deleteBtnHTML = isAdmin ? `<button class="delete-card-btn" onclick="event.stopPropagation(); deleteManhwa(${m.id})" title="حذف">🗑️</button>` : '';
+
       card.innerHTML = `
-        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(${m.id})">♥</button>
+        ${deleteBtnHTML}
+        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite(${m.id})">♥</button>
         <img src="${m.cover}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/180x240/1f2338/ffffff?text=No+Image'">
         <div class="card-body">
           <div class="card-title">${m.title}</div>
-          <a href="manhwa.html?id=${m.id}&chap=1" class="btn">قراءة الفصل الأول</a>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <span class="card-genre-tag">${genre}</span>
+            <span class="status-badge ${statusClass}">${status}</span>
+          </div>
+          <div class="card-rating">
+            <span>⭐ ${ratingVal}</span>
+          </div>
+          <button class="btn">عرض التفاصيل</button>
         </div>
       `;
+
+      card.onclick = () => {
+        window.history.pushState({}, '', `index.html?id=${m.id}`);
+        showDetailsView(m.id);
+      };
+
+      if (isAdmin) {
+        let pressTimer;
+        card.addEventListener('touchstart', () => {
+          pressTimer = setTimeout(() => { openAdminModal(m.id); }, 700);
+        });
+        card.addEventListener('touchend', () => { clearTimeout(pressTimer); });
+        card.addEventListener('mousedown', () => {
+          pressTimer = setTimeout(() => { openAdminModal(m.id); }, 700);
+        });
+        card.addEventListener('mouseup', () => { clearTimeout(pressTimer); });
+      }
+
       return card;
+    }
+
+    function deleteManhwa(id) {
+      if (confirm('هل أنت متأكد من حذف هذه المانهوا نهائياً؟ 🗑️')) {
+        let manhwas = getStoredManhwas();
+        manhwas = manhwas.filter(m => m.id !== id);
+        localStorage.setItem('myManhwas', JSON.stringify(manhwas));
+        
+        let favorites = getFavorites().filter(favId => favId !== id);
+        localStorage.setItem('myFavorites', JSON.stringify(favorites));
+
+        showToast('تم حذف المانهوا بنجاح!');
+        loadManhwas();
+        setupHeroSlider();
+      }
     }
 
     function toggleFavorite(id) {
       let favorites = getFavorites();
       if (favorites.includes(id)) {
         favorites = favorites.filter(favId => favId !== id);
+        showToast('إزالة من المفضلة 🤍');
       } else {
         favorites.push(id);
+        showToast('تمت الإضافة للمفضلة ❤️');
       }
       localStorage.setItem('myFavorites', JSON.stringify(favorites));
       loadManhwas();
+      setupAuthUI();
     }
 
     function convertDriveLink(url) {
       url = url.trim();
       let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-      if (match && match[1]) {
-        return `https://lh3.googleusercontent.com/d/${match[1]}`;
-      }
-      return url;
+      return match && match[1] ? `https://lh3.googleusercontent.com/d/${match[1]}` : url;
     }
 
-    function addNewManhwa() {
+    function saveManhwaData() {
+      const editId = document.getElementById('editManhwaId').value;
       const title = document.getElementById('newTitle').value.trim();
       let cover = document.getElementById('newCover').value.trim();
+      const desc = document.getElementById('newDesc').value.trim();
+      const genre = document.getElementById('newGenreSelect').value;
 
-      if (!title || !cover) {
-        alert('الرجاء تعبئة جميع الحقول!');
-        return;
-      }
-
+      if (!title || !cover) { showToast('الرجاء تعبئة الاسم والرابط!'); return; }
       cover = convertDriveLink(cover);
       const manhwas = getStoredManhwas();
-      const newId = manhwas.length > 0 ? manhwas[manhwas.length - 1].id + 1 : 1;
 
-      manhwas.push({ id: newId, title: title, cover: cover });
-      localStorage.setItem('myManhwas', JSON.stringify(manhwas));
+      if (editId) {
+        let manhwa = manhwas.find(m => m.id == editId);
+        if (manhwa) {
+          manhwa.title = title;
+          manhwa.cover = cover;
+          manhwa.desc = desc || manhwa.desc;
+          manhwa.genre = genre;
+          localStorage.setItem('myManhwas', JSON.stringify(manhwas));
+          showToast('تم تعديل المانهوا بنجاح! 🛠️');
+        }
+      } else {
+        const newId = manhwas.length > 0 ? manhwas[manhwas.length - 1].id + 1 : 1;
+        manhwas.push({ id: newId, title, cover, genre, status: "مستمرة", desc: desc || 'لا توجد قصة متاحة.', rating: 5.0, ratingsCount: 1 });
+        localStorage.setItem('myManhwas', JSON.stringify(manhwas));
+        showToast('تمت إضافة المانهوا بنجاح! 🚀');
+      }
 
-      document.getElementById('newTitle').value = '';
-      document.getElementById('newCover').value = '';
       closeAdminModal();
-      alert('تمت إضافة المانهوا بنجاح!');
       loadManhwas();
+      setupHeroSlider();
+    }
+
+    function setupHeroSlider() {
+      const slider = document.getElementById('heroSlider');
+      const manhwas = getStoredManhwas();
+      if (manhwas.length === 0) { slider.innerHTML = ''; return; }
+
+      let html = '';
+      const featured = manhwas.slice(0, 3);
+      featured.forEach((m, index) => {
+        html += `
+          <div class="hero-slide ${index === 0 ? 'active' : ''}" onclick="window.history.pushState({}, '', 'index.html?id=${m.id}'); showDetailsView(${m.id});" style="cursor:pointer;">
+            <img src="${m.cover}" class="hero-img" alt="${m.title}">
+            <div class="hero-content">
+              <div class="hero-title">${m.title}</div>
+              <div class="hero-desc">${m.desc || 'أحدث الأعمال المضافة.'}</div>
+              <span class="btn" style="width: 90px; padding: 5px 8px; font-size:11px; text-align:center;">اقرأ الآن</span>
+            </div>
+          </div>
+        `;
+      });
+      slider.innerHTML = html;
+
+      let slides = slider.querySelectorAll('.hero-slide');
+      if (slides.length > 1) {
+        let currentSlide = 0;
+        setInterval(() => {
+          slides[currentSlide].classList.remove('active');
+          currentSlide = (currentSlide + 1) % slides.length;
+          slides[currentSlide].classList.add('active');
+        }, 4000);
+      }
+    }
+
+    function setupContinueReading() {
+      const lastRead = JSON.parse(localStorage.getItem('lastRead') || 'null');
+      if (lastRead) {
+        document.getElementById('continueReadingBar').style.display = 'flex';
+        document.getElementById('lastReadTitle').innerText = lastRead.title;
+        document.getElementById('lastReadBtn').href = lastRead.url;
+      }
+    }
+
+    function saveLastRead(title, id, chap) {
+      const data = { title, id, url: `manhwa.html?id=${id}&chap=${chap}` };
+      localStorage.setItem('lastRead', JSON.stringify(data));
     }
   </script>
 </body>
