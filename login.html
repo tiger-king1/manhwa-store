@@ -257,6 +257,7 @@
       localStorage.setItem('allUsersDatabase', JSON.stringify(users));
 
       localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('username', username.toLowerCase());
       localStorage.setItem('userProfile', JSON.stringify(newUser));
 
       alert('✨ تم إنشاء الحساب بنجاح!');
@@ -274,7 +275,6 @@
 
       const userKey = username.toLowerCase();
 
-      // 🔑 حسابات الأدمنية الثلاثة المعتمدين (مطبقة مع حالة الحروف الصغرى للربط الصحيح)
       const systemAdmins = {
         'admin': { pass: 'htibss41', name: 'admin', avatar: 'https://via.placeholder.com/100/00f2fe/000000?text=Admin', bio: 'مدير الموقع الرئيسي 🗿🔥' },
         'yhya': { pass: 'yhya123', name: 'yhya', avatar: 'https://via.placeholder.com/100/8a2be2/ffffff?text=yhya', bio: 'أدمن المتجر 🗿' },
@@ -284,6 +284,7 @@
       if (systemAdmins[userKey] && systemAdmins[userKey].pass === password) {
         const adminData = systemAdmins[userKey];
         localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('username', userKey);
         localStorage.setItem('userProfile', JSON.stringify({
           username: userKey,
           name: adminData.name,
@@ -300,6 +301,7 @@
 
       if (foundUser) {
         localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('username', userKey);
         localStorage.setItem('userProfile', JSON.stringify(foundUser));
         alert(`أهلاً بك مجدداً يا ${foundUser.name}! 🚀`);
         window.location.href = 'index.html';
