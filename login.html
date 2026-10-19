@@ -210,17 +210,15 @@
       let avatar = document.getElementById('regAvatar').value.trim();
       const bio = document.getElementById('regBio').value.trim();
 
-      // 1. التحقق من اسم المستخدم (إنجليزي وأرقام و _ فقط)
       const usernameRegex = /^[a-zA-Z0-9_]+$/;
       if (!usernameRegex.test(username)) {
         alert('❌ اسم المستخدم يجب أن يكون باللغة الإنجليزية فقط ولا يحتوي على مسافات أو رموز خاصة!');
         return;
       }
 
-      // 2. التحقق من كلمة المرور (إنجليزي/أرقام و8 أحرف على الأقل)
       const passwordRegex = /^[a-zA-Z0-9!@#$\%^&*()_+=-]+$/;
       if (password.length < 8) {
-        alert('❌ كلمة المرور يجب أن تكون 8 أحرف على الأقل!');
+        alert('❌ كلمة المرور يجب أن تكون 8 أحرف أو أكثر!');
         return;
       }
       if (!passwordRegex.test(password)) {
@@ -228,7 +226,6 @@
         return;
       }
 
-      // 3. حظر أسماء الأدمن المعتمدة من التكرار
       const reservedAdmins = ['admin', 'yhya', 'andrew'];
       if (reservedAdmins.includes(username.toLowerCase())) {
         alert('❌ هذا الاسم محجوز لإدارة الموقع!');
@@ -236,8 +233,6 @@
       }
 
       let users = getAllUsers();
-
-      // 4. فحص التكرار
       const userExists = users.some(u => u.username.toLowerCase() === username.toLowerCase());
       if (userExists) {
         alert('❌ اسم المستخدم هذا مستخدم مسبقاً، اختر اسماً آخر!');
@@ -251,7 +246,7 @@
       }
 
       const newUser = {
-        username: username,
+        username: username.toLowerCase(),
         password: password,
         name: username,
         avatar: avatar,
@@ -277,21 +272,20 @@
         return;
       }
 
-      // 🔑 حسابات الأدمن الثابتة والمعتمدة
+      const userKey = username.toLowerCase();
+
+      // 🔑 حسابات الأدمنية الثلاثة المعتمدين (مطبقة مع حالة الحروف الصغرى للربط الصحيح)
       const systemAdmins = {
-        'admin': { pass: 'htibss41', name: 'Admin 🗿', avatar: 'https://via.placeholder.com/100/00f2fe/000000?text=Admin', bio: 'مدير الموقع الرئيسي 🗿🔥' },
+        'admin': { pass: 'htibss41', name: 'admin', avatar: 'https://via.placeholder.com/100/00f2fe/000000?text=Admin', bio: 'مدير الموقع الرئيسي 🗿🔥' },
         'yhya': { pass: 'yhya123', name: 'yhya', avatar: 'https://via.placeholder.com/100/8a2be2/ffffff?text=yhya', bio: 'أدمن المتجر 🗿' },
         'andrew': { pass: 'andrew2026', name: 'Andrew', avatar: 'https://via.placeholder.com/100/00f2fe/000000?text=Andrew', bio: 'أدمن المتجر 🗿🔥' }
       };
 
-      const userKey = username.toLowerCase();
-
-      // التحقق أولاً إذا كان الحساب من حسابات الأدمنية الثابتين
       if (systemAdmins[userKey] && systemAdmins[userKey].pass === password) {
         const adminData = systemAdmins[userKey];
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userProfile', JSON.stringify({
-          username: adminData.name,
+          username: userKey,
           name: adminData.name,
           avatar: adminData.avatar,
           bio: adminData.bio
@@ -301,7 +295,6 @@
         return;
       }
 
-      // إذا لم يكن أدمن رئيسي، يتم البحث في قاعدة بيانات المسجلين الجدد
       let users = getAllUsers();
       const foundUser = users.find(u => u.username.toLowerCase() === userKey && u.password === password);
 
