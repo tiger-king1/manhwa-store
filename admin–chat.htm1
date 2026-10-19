@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>شات الأدمن والقرّاء 💬</title>
+  <style>
+    :root {
+      --bg-color: #0d0f17;
+      --card-bg: #161926;
+      --text-color: #fff;
+      --text-muted: #a0aec0;
+      --border-color: #333;
+      --accent: #8a2be2;
+      --accent-glow: #00f2fe;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* الشريط العلوي */
+    header {
+      background: var(--card-bg);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--accent);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .header-title {
+      color: var(--accent-glow);
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-btn {
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    .back-btn:hover {
+      background: var(--accent-glow);
+      color: #000;
+    }
+
+    /* حاوية الشات والرسائل */
+    .chat-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .message-bubble {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      position: relative;
+      word-break: break-word;
+    }
+
+    /* رسائل الأدمن */
+    .message-bubble.admin-msg {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #8a2be2, #4a00e0);
+      color: #fff;
+      border-bottom-right-radius: 2px;
+      border: 1px solid var(--accent-glow);
+    }
+
+    /* رسائل الأعضاء العاديين */
+    .message-bubble.user-msg {
+      align-self: flex-end;
+      background: var(--card-bg);
+      color: var(--text-color);
+      border-bottom-left-radius: 2px;
+      border: 1px solid var(--border-color);
+    }
+
+    .msg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 11px;
+      opacity: 0.8;
+      gap: 10px;
+    }
+
+    .msg-sender {
+      font-weight: bold;
+      color: var(--accent-glow);
+    }
+
+    .msg-time {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* شريط كتابة الرسائل بالأسفل */
+    .chat-input-bar {
+      background: var(--card-bg);
+      padding: 12px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 10px;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .chat-input-bar input {
+      flex: 1;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 10px 15px;
+      border-radius: 20px;
+      outline: none;
+      font-size: 14px;
+    }
+    .chat-input-bar input:focus {
+      border-color: var(--accent);
+    }
+
+    .chat-input-bar button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    .chat-input-bar button:hover {
+      background: var(--accent-glow);
+      color: #000;
+    }
+
+    .clear-chat-btn {
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">
+      💬 غرفة محادثة الأدمن
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button id="clearChatBtn" class="clear-chat-btn" onclick="clearAllMessages()" style="display:none;">مسح الشات 🗑️</button>
+      <a href="index.html" class="back-btn">العودة للرئيسية 🏠</a>
+    </div>
+  </header>
+
+  <!-- منطقة عرض الرسائل -->
+  <div class="chat-container" id="chatContainer"></div>
+
+  <!-- شريط الإرسال -->
+  <div class="chat-input-bar">
+    <input type="text" id="msgInput" placeholder="اكتب رسالتك هنا..." onkeypress="handleKeyPress(event)">
+    <button onclick="sendMessage()">إرسال 🚀</button>
+  </div>
+
+  <script>
+    const userProfile = JSON.parse(localStorage.getItem('userProfile') || 'null');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const isAdmin = isLoggedIn && userProfile && (userProfile.username === 'admin' || userProfile.name.includes('Admin'));
+
+    window.onload = function() {
+      // إظهار زر مسح الشات للأدمن فقط
+      if (isAdmin) {
+        document.getElementById('clearChatBtn').style.display = 'inline-block';
+      }
+      loadMessages();
+    };
+
+    function getMessages() {
+      return JSON.parse(localStorage.getItem('adminChatMessages') || '[]');
+    }
+
+    function loadMessages() {
+      const container = document.getElementById('chatContainer');
+      const messages = getMessages();
+
+      container.innerHTML = '';
+
+      if (messages.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#777; margin-auto;">لا توجد رسائل بعد. ابدأ المحادثة الآن! 🚀</p>';
+        return;
+      }
+
+      messages.forEach(msg => {
+        const bubble = document.createElement('div');
+        bubble.className = `message-bubble ${msg.isAdmin ? 'admin-msg' : 'user-msg'}`;
+        
+        bubble.innerHTML = `
+          <div class="msg-header">
+            <span class="msg-sender">${msg.sender} ${msg.isAdmin ? '👑 (أدمن)' : ''}</span>
+            <span class="msg-time">${msg.time}</span>
+          </div>
+          <div class="msg-text">${msg.text}</div>
+        `;
+        container.appendChild(bubble);
+      });
+
+      // التمرير التلقائي لأسفل المحادثة
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('msgInput');
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      const senderName = (userProfile && userProfile.name) ? userProfile.name : 'زائر';
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+      const newMsg = {
+        sender: senderName,
+        text: text,
+        time: timeStr,
+        isAdmin: isAdmin
+      };
+
+      const messages = getMessages();
+      messages.push(newMsg);
+      localStorage.setItem('adminChatMessages', JSON.stringify(messages));
+
+      input.value = '';
+      loadMessages();
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    function clearAllMessages() {
+      if (confirm('هل أنت تأكد من مسح جميع الرسائل من الشات؟ 🗑️')) {
+        localStorage.removeItem('adminChatMessages');
+        loadMessages();
+      }
+    }
+  </script>
+</body>
+  </html>
+  
