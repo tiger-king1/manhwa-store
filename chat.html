@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>شات مناقشة المانهوا - مانهوانا 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #05080c;
+      --card-bg: #090e14;
+      --border-color: #1a2634;
+      --text-color: #e1e6ed;
+      --text-muted: #7c8c9e;
+      --accent-red: #e50914;
+      --gold: #f5c518;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* الهيدر العلوي */
+    header {
+      background: #090e14;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .back-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 5px; }
+    .header-title { font-size: 15px; font-weight: bold; color: #fff; }
+    .bg-change-hint { font-size: 11px; color: var(--text-muted); cursor: pointer; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 12px; border: 1px solid var(--border-color); }
+
+    /* حاوية الرسائل (تقليل العرض وجعل المحادثة ملمومة ومريحة) */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(5, 8, 12, 0.93);
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* تصميم فقاعة الرسالة (أسود داكن وعرض مقلل) */
+    .message-bubble {
+      background: #0c1219;
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 78%;
+      position: relative;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    }
+    .message-bubble.my-message {
+      align-self: flex-start;
+      border-right: 3px solid var(--accent-red);
+    }
+    .message-bubble.other-message {
+      align-self: flex-end;
+      border-left: 3px solid #283545;
+    }
+
+    .msg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+    .msg-user { font-weight: bold; color: var(--accent-red); }
+    .msg-time { color: var(--text-muted); font-size: 9px; }
+
+    /* اقتباس الرد الذهبي */
+    .reply-quote-box {
+      background: rgba(245, 197, 24, 0.08);
+      border-right: 2px solid var(--gold);
+      padding: 5px 8px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .reply-quote-user { font-size: 10px; font-weight: bold; color: var(--gold); }
+    .reply-quote-text { font-size: 10px; color: #bbb; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .msg-text { font-size: 13px; color: #fff; word-break: break-word; line-height: 1.4; }
+    .msg-img { max-width: 100%; border-radius: 8px; margin-top: 6px; display: block; max-height: 180px; object-fit: cover; }
+    .edited-badge { font-size: 9px; color: var(--text-muted); margin-right: 4px; }
+    .deleted-msg { color: var(--text-muted); font-style: italic; font-size: 11px; }
+
+    /* شريط الرد المؤقت */
+    .reply-preview-bar {
+      display: none;
+      background: #090e14;
+      border-top: 1px solid var(--border-color);
+      padding: 8px 15px;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--gold);
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* شريط الكتابة الإدخالي الجديد الفخم والمكبر */
+    .chat-input-wrapper {
+      background: #090e14;
+      border-top: 1px solid var(--border-color);
+      padding: 12px 15px;
+      width: 100%;
+    }
+
+    .chat-input-area {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #05080c;
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
+      padding: 6px 12px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 10px 8px;
+      font-size: 14px;
+      outline: none;
+      min-height: 42px;
+    }
+
+    /* مساحة الضغط الميدانية للأيقونات */
+    .icon-click-area {
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .icon-click-area:active { background: rgba(255, 255, 255, 0.1); }
+
+    /* أيقونة الكاميرا باللون الأسود الداكن مع خلفية رمادية أو سوداء فخمة */
+    .camera-icon-btn {
+      background: #1e2936;
+    }
+    .camera-icon-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #000;
+    }
+
+    /* أيقونة الملصق باللون الأبيض */
+    .sticker-icon-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: #ffffff;
+    }
+
+    /* زر الإرسال الأحمر المكبر */
+    .send-btn {
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px rgba(229, 9, 20, 0.4);
+    }
+
+    .msg-options {
+      display: flex; gap: 8px; margin-top: 5px; font-size: 10px; justify-content: flex-end;
+    }
+    .msg-opt-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 2px 4px; }
+    .msg-opt-btn:hover { color: #fff; }
+  </style>
+</head>
+<body id="chatBody">
+
+  <header>
+    <div class="header-left">
+      <button class="back-btn" onclick="location.href='index.html'">←</button>
+      <div class="header-title">شات المناقشة 💬</div>
+    </div>
+    <div class="bg-change-hint" onclick="document.getElementById('bgImageInput').click()">🖼️ خلفية الشات</div>
+  </header>
+
+  <!-- حاوية الرسائل -->
+  <div class="chat-messages" id="messagesContainer">
+    <div style="text-align: center; color: var(--text-muted); font-size: 11px; margin-top: 15px;">أهلاً بك! الشات جاهز للتواصل والردود 🚀</div>
+  </div>
+
+  <!-- شريط الرد المؤقت -->
+  <div class="reply-preview-bar" id="replyPreviewBar">
+    <span id="replyingToText">الرد على: ...</span>
+    <button onclick="cancelReply()" style="background:none; border:none; color:#fff; cursor:pointer; font-weight:bold;">✕</button>
+  </div>
+
+  <!-- شريط الإدخال المطور بتنسيق واسع ومريح للضغط -->
+  <div class="chat-input-wrapper">
+    <div class="chat-input-area">
+      
+      <!-- زر إرسال الرسالة -->
+      <button class="send-btn" onclick="sendMessage()">➤</button>
+
+      <!-- حقل الكتابة الرئيسي -->
+      <input type="text" id="messageInput" class="chat-input" placeholder="اكتب رسالتك..." onkeydown="if(event.key === 'Enter') sendMessage()">
+
+      <!-- أيقونة الملصقات (باللون الأبيض) -->
+      <button class="icon-click-area sticker-icon-btn" onclick="document.getElementById('chatImageInput').click()" title="إرسال ملصق">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+        </svg>
+      </button>
+
+      <!-- أيقونة الكاميرا (باللون الأسود) -->
+      <button class="icon-click-area camera-icon-btn" onclick="document.getElementById('chatImageInput').click()" title="إرسال صورة من المعرض">
+        <svg viewBox="0 0 24 24">
+          <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+        </svg>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- خفي لاختيار الصور والملصقات -->
+  <input type="file" id="chatImageInput" accept="image/*" style="display: none;" onchange="handleChatImageUpload(event)">
+  <input type="file" id="bgImageInput" accept="image/*" style="display: none;" onchange="changeChatBg(event)">
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, updateDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
+      authDomain: "manhwastore.firebaseapp.com",
+      projectId: "manhwastore",
+      storageBucket: "manhwastore.firebasestorage.app",
+      messagingSenderId: "706758090521",
+      appId: "1:706758090521:web:f2cf72a74a9e36e5296f88",
+      measurementId: "G-MS0H0PW03Q"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let currentUser = (localStorage.getItem("currentUser") || "").trim();
+    if (!currentUser || currentUser === "زائر") {
+      currentUser = "مستخدم_" + Math.floor(Math.random() * 900 + 100);
+      localStorage.setItem("currentUser", currentUser);
+    }
+
+    const adminUsernames = ["admin", "yhya", "andrew"];
+    const isAdmin = adminUsernames.includes(currentUser.toLowerCase());
+
+    let replyingTo = null;
+    let editingMsgId = null;
+    let tempImageBase64 = "";
+
+    const savedBg = localStorage.getItem("chatCustomBg");
+    if (savedBg) {
+      document.getElementById("chatBody").style.backgroundImage = `url(${savedBg})`;
+    }
+
+    window.changeChatBg = function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const bgData = e.target.result;
+          localStorage.setItem("chatCustomBg", bgData);
+          document.getElementById("chatBody").style.backgroundImage = `url(${bgData})`;
+          alert("تم تغيير خلفية الشات بنجاح! 🖼️✨");
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    window.handleChatImageUpload = function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          tempImageBase64 = e.target.result;
+          alert("تم اختيار الصورة/الملصق! انقر زر الإرسال لتنزل بالشات 📷");
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    window.sendMessage = async function() {
+      const input = document.getElementById("messageInput");
+      const text = input.value.trim();
+
+      if (!text && !tempImageBase64) return;
+
+      if (editingMsgId) {
+        try {
+          await updateDoc(doc(db, "chatMessages", editingMsgId), {
+            text: text,
+            isEdited: true
+          });
+          editingMsgId = null;
+          input.value = "";
+        } catch (e) {
+          alert("خطأ في التعديل");
+        }
+        return;
+      }
+
+      const msgData = {
+        user: currentUser,
+        text: text,
+        image: tempImageBase64 || "",
+        createdAt: new Date().toISOString(),
+        replyTo: replyingTo ? { id: replyingTo.id, user: replyingTo.user, text: replyingTo.text } : null,
+        isDeleted: false,
+        isEdited: false
+      };
+
+      try {
+        await addDoc(collection(db, "chatMessages"), msgData);
+        input.value = "";
+        tempImageBase64 = "";
+        cancelReply();
+      } catch (e) {
+        alert("فشل الإرسال");
+      }
+    };
+
+    // مزامنة لحظية حية تتحدث فوراً عند الجميع
+    const q = query(collection(db, "chatMessages"), orderBy("createdAt", "asc"));
+    onSnapshot(q, (snapshot) => {
+      const container = document.getElementById("messagesContainer");
+      container.innerHTML = "";
+
+      if (snapshot.empty) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 11px; margin-top: 15px;">لا توجد رسائل بعد. ابدأ النقاش 🚀</div>`;
+        return;
+      }
+
+      snapshot.forEach((docSnap) => {
+        const msg = { id: docSnap.id, ...docSnap.data() };
+        const isMyMsg = msg.user === currentUser;
+        const bubble = document.createElement("div");
+        bubble.className = `message-bubble ${isMyMsg ? 'my-message' : 'other-message'}`;
+        bubble.id = `msg_${msg.id}`;
+
+        let timeStr = "";
+        if (msg.createdAt) {
+          const d = new Date(msg.createdAt);
+          timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        if (msg.isDeleted) {
+          bubble.innerHTML = `<div class="deleted-msg">تم حذف الرسالة 🚫</div>`;
+        } else {
+          let replyHtml = "";
+          if (msg.replyTo) {
+            replyHtml = `
+              <div class="reply-quote-box" onclick="scrollToMessage('${msg.replyTo.id}')">
+                <div class="reply-quote-user">↩ ${msg.replyTo.user}</div>
+                <div class="reply-quote-text">${msg.replyTo.text || 'صورة/ملصق 📷'}</div>
+              </div>
+            `;
+          }
+
+          let optionsHtml = `<div class="msg-options"><button class="msg-opt-btn" onclick="prepareReply('${msg.id}', '${msg.user}', '${msg.text || 'صورة'}')">↩ رد</button>`;
+          if (isMyMsg) {
+            optionsHtml += `<button class="msg-opt-btn" onclick="prepareEdit('${msg.id}', '${msg.text || ''}')">✏ تعديل</button>`;
+          }
+          if (isMyMsg || isAdmin) {
+            optionsHtml += `<button class="msg-opt-btn" onclick="deleteMessage('${msg.id}')" style="color:var(--accent-red)">🗑 حذف</button>`;
+          }
+          optionsHtml += `</div>`;
+
+          bubble.innerHTML = `
+            <div class="msg-header">
+              <span class="msg-user">${msg.user}</span>
+              <span class="msg-time">${timeStr}</span>
+            </div>
+            ${replyHtml}
+            ${msg.text ? `<div class="msg-text">${msg.text}${msg.isEdited ? '<span class="edited-badge">(معدلة)</span>' : ''}</div>` : ''}
+            ${msg.image ? `<img src="${msg.image}" class="msg-img">` : ''}
+            ${optionsHtml}
+          `;
+        }
+
+        container.appendChild(bubble);
+      });
+
+      // تنزيل الشاشة للأسفل مع كل رسالة جديدة
+      container.scrollTop = container.scrollHeight;
+    });
+
+    window.prepareReply = function(id, user, text) {
+      replyingTo = { id, user, text };
+      document.getElementById("replyingToText").innerText = `الرد على ${user}: ${text}`;
+      document.getElementById("replyPreviewBar").style.display = "flex";
+      document.getElementById("messageInput").focus();
+    };
+
+    window.cancelReply = function() {
+      replyingTo = null;
+      document.getElementById("replyPreviewBar").style.display = "none";
+    };
+
+    window.scrollToMessage = function(id) {
+      const target = document.getElementById(`msg_${id}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.borderColor = "#f5c518";
+        setTimeout(() => target.style.borderColor = '', 1500);
+      }
+    };
+
+    window.prepareEdit = function(id, currentText) {
+      editingMsgId = id;
+      document.getElementById("messageInput").value = currentText;
+      document.getElementById("messageInput").focus();
+    };
+
+    window.deleteMessage = async function(id) {
+      if (confirm("هل تريد حذف هذه الرسالة؟")) {
+        try {
+          await updateDoc(doc(db, "chatMessages", id), {
+            isDeleted: true,
+            text: "",
+            image: ""
+          });
+        } catch (e) {
+          alert("فشل الحذف");
+        }
+      }
+    };
+  </script>
+</body>
+</html>
