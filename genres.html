@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>الأقسام والتصفية - مانهوانا Manhwana 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #0d0f17;
+      --card-bg: #161926;
+      --text-color: #fff;
+      --text-muted: #8c96a5;
+      --border-color: #24283b;
+      --header-bg: #161926;
+      --accent: #e50914;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0 0 90px 0;
+      font-family: sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+    }
+    
+    header {
+      background: var(--header-bg);
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+
+    .back-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+    .logo-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .logo-icon { background: #e50914; color: #fff; font-weight: bold; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { color: #fff; font-size: 18px; font-weight: bold; letter-spacing: 0.5px; }
+
+    .container { width: 100%; max-width: 960px; margin: 0 auto; padding: 15px 12px; }
+    .page-title { color: #fff; font-size: 18px; font-weight: bold; margin-bottom: 15px; border-right: 4px solid #e50914; padding-right: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .back-link { font-size: 12px; color: #e50914; cursor: pointer; text-decoration: underline; }
+
+    .genres-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+    @media(min-width: 600px) { .genres-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
+
+    .genre-card {
+      border-radius: 12px; height: 110px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: 0.25s ease; position: relative; overflow: hidden; border: 1px solid var(--border-color);
+      background-color: #161926; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .genre-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+    .genre-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.85)); z-index: 2; transition: 0.25s;
+    }
+    .genre-card:hover { border-color: #e50914; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4); }
+    .genre-card span { font-size: 16px; font-weight: bold; color: #fff; z-index: 3; text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+
+    .filters-box {
+      background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;
+      margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .filter-group { flex: 1; min-width: 130px; display: flex; flex-direction: column; gap: 4px; }
+    .filter-group label { font-size: 11px; color: var(--text-muted); font-weight: bold; }
+    .filter-select { background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 10px; border-radius: 8px; font-size: 12px; outline: none; cursor: pointer; }
+    .filter-select:focus { border-color: #e50914; }
+
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media(min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; } }
+
+    .card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); transition: 0.2s; position: relative; cursor: pointer; }
+    .card:hover { transform: translateY(-3px); border-color: #e50914; }
+    .card img { width: 100%; height: 170px; object-fit: cover; display: block; }
+    .card-body { padding: 8px; }
+    .card-title { font-size: 12px; font-weight: bold; margin-bottom: 4px; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-info { font-size: 10px; color: var(--text-muted); display: flex; justify-content: space-between; }
+    .imdb-badge { background: #f5c518; color: #000; padding: 1px 4px; border-radius: 3px; font-weight: bold; font-size: 9px; }
+
+    .empty-msg { grid-column: 1/-1; text-align: center; color: var(--text-muted); font-size: 13px; padding: 40px 0; }
+
+    .bottom-nav {
+      position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+      width: 92%; max-width: 480px; background: rgba(22, 25, 38, 0.95);
+      backdrop-filter: blur(12px); border: 1px solid var(--border-color);
+      display: flex; justify-content: space-around; padding: 8px 5px; z-index: 1000;
+      border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .nav-item {
+      background: none; border: none; color: var(--text-muted); font-size: 11px; font-weight: 600;
+      display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; text-decoration: none; transition: 0.2s;
+      padding: 6px 14px; border-radius: 12px;
+    }
+    .nav-item.active, .nav-item:hover { color: #fff; background: rgba(229, 9, 20, 0.2); }
+    .nav-item.active svg { fill: #e50914; stroke: #e50914; transform: scale(1.15); }
+    .nav-item svg { width: 20px; height: 20px; fill: var(--text-muted); stroke: var(--text-muted); transition: 0.2s; }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <header>
+    <button class="back-btn" onclick="handleHeaderBack()">←</button>
+    <div class="logo-container" onclick="location.href='index.html'">
+      <div class="logo-icon">M</div>
+      <div class="logo-text">مانهوانا</div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="genresMainView">
+      <div class="page-title">أقسام المانجا والمانهوا</div>
+      
+      <div class="genres-grid">
+        <div class="genre-card" onclick="openGenreFilter('أكشن')">
+          <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500" alt="أكشن">
+          <span>أكشن</span>
+        </div>
+        <div class="genre-card" onclick="openGenreFilter('فانتزيا')">
+          <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500" alt="فانتزيا">
+          <span>فانتزيا</span>
+        </div>
+        <div class="genre-card" onclick="openGenreFilter('مغامرات')">
+          <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" alt="مغامرات">
+          <span>مغامرات</span>
+        </div>
+        <div class="genre-card" onclick="openGenreFilter('دراما')">
+          <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500" alt="دراما">
+          <span>دراما</span>
+        </div>
+        <div class="genre-card" onclick="openGenreFilter('رومانسي')">
+          <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500" alt="رومانسي">
+          <span>رومانسي</span>
+        </div>
+        <div class="genre-card" onclick="openGenreFilter('رعب')">
+          <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=500" alt="رعب">
+          <span>رعب</span>
+        </div>
+        <div class="genre-card" onclick="openGenreFilter('غموض')">
+          <img src="https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?w=500" alt="غموض">
+          <span>غموض</span>
+        </div>
+        <div class="genre-card" onclick="openGenreFilter('إثارة')">
+          <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=500" alt="إثارة">
+          <span>إثارة</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="categoryFilterView" style="display: none;">
+      <div class="page-title">
+        <span id="categoryTitle">قسم: أكشن</span>
+        <span class="back-link" onclick="closeGenreFilter()">← رجوع للأقسام</span>
+      </div>
+
+      <div class="filters-box">
+        <div class="filter-group">
+          <label>الترتيب حسب</label>
+          <select id="sortSelect" class="filter-select" onchange="applyFilters()">
+            <option value="latest">الأحدث</option>
+            <option value="rating">الأعلى تقييماً</option>
+            <option value="name">الاسم (أ-ي)</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label>الحالة</label>
+          <select id="statusSelect" class="filter-select" onchange="applyFilters()">
+            <option value="all">الكل</option>
+            <option value="ongoing">مستمر</option>
+            <option value="completed">مكتمل</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid" id="categoryGrid"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span>بحث</span>
+    </a>
+    <a href="genres.html" class="nav-item active">
+      <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+      <span>الأقسام</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>الحساب</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
+      authDomain: "manhwastore.firebaseapp.com",
+      projectId: "manhwastore",
+      storageBucket: "manhwastore.firebasestorage.app",
+      messagingSenderId: "706758090521",
+      appId: "1:706758090521:web:f2cf72a74a9e36e5296f88",
+      measurementId: "G-MS0H0PW03Q"
+    };
+
+    let currentSelectedGenre = "";
+
+    let allWorks = [
+      { title: "Solo Leveling", genre: "أكشن", status: "completed", rating: 9.8, cover: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500" },
+      { title: "Omniscient Reader", genre: "فانتزيا", status: "ongoing", rating: 9.5, cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500" },
+      { title: "Tower of God", genre: "مغامرات", status: "ongoing", rating: 8.9, cover: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" },
+      { title: "Beginning After The End", genre: "أكشن", status: "ongoing", rating: 9.2, cover: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500" }
+    ];
+
+    window.openGenreFilter = function(genreName) {
+      currentSelectedGenre = genreName;
+      document.getElementById("categoryTitle").innerText = "قسم: " + genreName;
+      document.getElementById("genresMainView").style.display = "none";
+      document.getElementById("categoryFilterView").style.display = "block";
+      applyFilters();
+    };
+
+    window.closeGenreFilter = function() {
+      document.getElementById("categoryFilterView").style.display = "none";
+      document.getElementById("genresMainView").style.display = "block";
+    };
+
+    window.handleHeaderBack = function() {
+      if (document.getElementById("categoryFilterView").style.display === "block") {
+        closeGenreFilter();
+      } else {
+        location.href = "index.html";
+      }
+    };
+
+    window.applyFilters = function() {
+      const sortBy = document.getElementById("sortSelect").value;
+      const statusBy = document.getElementById("statusSelect").value;
+
+      let filtered = allWorks.filter(item => {
+        const itemGenre = item.genre || '';
+        const matchGenre = itemGenre.toLowerCase().includes(currentSelectedGenre.toLowerCase());
+        const matchStatus = statusBy === 'all' || (item.status && item.status === statusBy);
+        return matchGenre && matchStatus;
+      });
+
+      if (sortBy === 'rating') {
+        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      } else if (sortBy === 'name') {
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+      }
+
+      renderCategoryGrid(filtered);
+    };
+
+    function renderCategoryGrid(list) {
+      const grid = document.getElementById("categoryGrid");
+      grid.innerHTML = "";
+
+      if (list.length === 0) {
+        grid.innerHTML = "<div class='empty-msg'>لا توجد أعمال مضافة في هذا القسم حالياً.</div>";
+        return;
+      }
+
+      list.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${item.cover || 'https://via.placeholder.com/150'}" alt="${item.title}">
+          <div class="card-body">
+            <div class="card-title">${item.title}</div>
+            <div class="card-info">
+              <span>${item.genre || currentSelectedGenre}</span>
+              <span class="imdb-badge">${item.rating || '8.5'}</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const manhwaCollection = collection(db, "manhwas");
+
+      onSnapshot(manhwaCollection, (snapshot) => {
+        const firebaseData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        if (firebaseData.length > 0) {
+          allWorks = firebaseData;
+          if (document.getElementById("categoryFilterView").style.display === "block") {
+            applyFilters();
+          }
+        }
+      });
+    } catch(e) {}
+  </script>
+</body>
+</html>
