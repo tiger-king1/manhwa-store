@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>الرئيسية - مانهوانا Manhwana 🗿🔥</title>
+
+  <!-- كود إعلان Adsterra -->
+  <script data-cfasync="false" src="https://bauval.org/14/69ee4c1eb8a2cce7a3d94c18ec7fa810"></script>
+
   <style>
     :root {
       --bg-color: #0d0f17;
@@ -319,7 +323,7 @@
           await updateDoc(doc(db, "manhwas", id), { title, cover, desc, genre });
           alert("تم تعديل العمل بنجاح!");
         } else {
-          await addDoc(collection(db, "manhwas"), { title, cover, desc, genre, createdAt: new Date() });
+          await addDoc(collection(db, "manhwas", { title, cover, desc, genre, createdAt: new Date() }));
           alert("تمت الإضافة بنجاح!");
         }
       }
