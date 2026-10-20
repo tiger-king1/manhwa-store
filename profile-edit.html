@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>تعديل الحساب - مانهوانا 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #070d12;
+      --card-bg: #0b131a;
+      --border-color: #16222f;
+      --text-color: #e1e6ed;
+      --text-muted: #7c8c9e;
+      --accent-red: #e50914;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0 0 90px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky; top: 0; z-index: 1000;
+    }
+    .back-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+    .header-title { font-size: 16px; font-weight: bold; color: #fff; }
+
+    .edit-container {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .profile-header-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 14px;
+    }
+
+    .avatar-preview {
+      width: 90px; height: 90px; border-radius: 50%;
+      border: 2px solid var(--accent-red); object-fit: cover; background: #16222f;
+    }
+
+    .change-img-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .change-img-btn:hover { border-color: var(--accent-red); }
+
+    .section-label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      margin: 20px 0 10px 5px;
+      border-right: 3px solid var(--accent-red);
+      padding-right: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      transition: 0.2s;
+    }
+    .form-input:focus { border-color: var(--accent-red); }
+
+    .gender-options {
+      display: flex;
+      gap: 10px;
+    }
+    .gender-btn {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .gender-btn.selected {
+      background: rgba(229, 9, 20, 0.15);
+      border-color: var(--accent-red);
+      color: #fff;
+    }
+
+    .save-btn {
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+    }
+    .save-btn:hover { opacity: 0.9; }
+
+    /* نافذة التحميل */
+    .loading-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center;
+      z-index: 3000; flex-direction: column; gap: 15px; color: #fff; font-weight: bold; font-size: 14px;
+    }
+    .spinner {
+      width: 40px; height: 40px; border: 4px solid var(--border-color); border-top: 4px solid var(--accent-red);
+      border-radius: 50%; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <button class="back-btn" onclick="location.href='account.html'">←</button>
+    <div class="header-title">تعديل الحساب 🗿</div>
+  </header>
+
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div>جاري حفظ البيانات ورفع الأفتار للسيرفر... ⏳</div>
+  </div>
+
+  <div class="edit-container">
+    
+    <div class="profile-header-box">
+      <img id="previewAvatar" class="avatar-preview" src="https://via.placeholder.com/150" alt="صورة الملف الشخصي">
+      <input type="file" id="imageInputFile" accept="image/*" style="display: none;">
+      <button class="change-img-btn" onclick="document.getElementById('imageInputFile').click()">تغيير الصورة من المعرض</button>
+    </div>
+
+    <div class="section-label">عام</div>
+
+    <div class="form-group">
+      <label>الإسم الأول</label>
+      <input type="text" id="firstNameInput" class="form-input" placeholder="...">
+    </div>
+
+    <div class="form-group">
+      <label>الإسم الثاني (العائلة)</label>
+      <input type="text" id="lastNameInput" class="form-input" placeholder="...">
+    </div>
+
+    <div class="form-group">
+      <label>الجنس</label>
+      <div class="gender-options">
+        <div class="gender-btn selected" id="genderMale" onclick="setGender('ذكر')">ذكر</div>
+        <div class="gender-btn" id="genderFemale" onclick="setGender('أنثى')">أنثى</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>البلد</label>
+      <input type="text" id="countryInput" class="form-input" placeholder="...">
+    </div>
+
+    <div class="form-group">
+      <label>المدينة</label>
+      <input type="text" id="cityInput" class="form-input" placeholder="...">
+    </div>
+
+    <div class="form-group">
+      <label>الهاتف</label>
+      <input type="tel" id="phoneInput" class="form-input" placeholder="...">
+    </div>
+
+    <div class="form-group">
+      <label>تاريخ الولادة</label>
+      <input type="date" id="birthInput" class="form-input">
+    </div>
+
+    <button class="save-btn" onclick="saveProfileChangesToCloud()">حفظ التغييرات</button>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
+      authDomain: "manhwastore.firebaseapp.com",
+      projectId: "manhwastore",
+      storageBucket: "manhwastore.firebasestorage.app",
+      messagingSenderId: "706758090521",
+      appId: "1:706758090521:web:f2cf72a74a9e36e5296f88",
+      measurementId: "G-MS0H0PW03Q"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let selectedGender = "ذكر";
+    let base64Image = "";
+    const currentUsername = (localStorage.getItem("currentUser") || "admin").trim().toLowerCase();
+
+    window.setGender = function(g) {
+      selectedGender = g;
+      document.getElementById("genderMale").classList.toggle("selected", g === "ذكر");
+      document.getElementById("genderFemale").classList.toggle("selected", g === "أنثى");
+    };
+
+    document.getElementById("imageInputFile").addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          base64Image = e.target.result;
+          document.getElementById("previewAvatar").src = base64Image;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // جلب البيانات القديمة من السيرفر عند فتح الصفحة
+    async function loadCloudProfile() {
+      try {
+        const docRef = doc(db, "users", currentUsername);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.firstName) document.getElementById("firstNameInput").value = data.firstName;
+          if (data.lastName) document.getElementById("lastNameInput").value = data.lastName;
+          if (data.country) document.getElementById("countryInput").value = data.country;
+          if (data.city) document.getElementById("cityInput").value = data.city;
+          if (data.phone) document.getElementById("phoneInput").value = data.phone;
+          if (data.birth) document.getElementById("birthInput").value = data.birth;
+          if (data.gender) setGender(data.gender);
+          if (data.avatar) {
+            base64Image = data.avatar;
+            document.getElementById("previewAvatar").src = base64Image;
+          }
+        }
+      } catch (e) {
+        console.log("خطأ في جلب الملف الشخصي");
+      }
+    }
+
+    // حفظ البيانات والأفتار على السيرفر (Firebase) لتظهر للجميع
+    window.saveProfileChangesToCloud = async function() {
+      document.getElementById("loadingOverlay").style.display = "flex";
+
+      const profileData = {
+        username: currentUsername,
+        firstName: document.getElementById("firstNameInput").value.trim(),
+        lastName: document.getElementById("lastNameInput").value.trim(),
+        gender: selectedGender,
+        country: document.getElementById("countryInput").value.trim(),
+        city: document.getElementById("cityInput").value.trim(),
+        phone: document.getElementById("phoneInput").value.trim(),
+        birth: document.getElementById("birthInput").value.trim(),
+        avatar: base64Image || document.getElementById("previewAvatar").src,
+        updatedAt: new Date().toISOString()
+      };
+
+      try {
+        await setDoc(doc(db, "users", currentUsername), profileData);
+        // تحديث محلي أيضاً لسرعة العرض
+        localStorage.setItem("userProfileData", JSON.stringify(profileData));
+        if (base64Image) {
+          localStorage.setItem("adminAvatar", base64Image);
+        }
+
+        document.getElementById("loadingOverlay").style.display = "none";
+        alert("تم حفظ وتحديث الأفتار على السيرفر بنجاح للجميع! 🚀🗿");
+        location.href = 'account.html';
+      } catch (error) {
+        document.getElementById("loadingOverlay").style.display = "none";
+        alert("حدث خطأ أثناء الحفظ: " + error.message);
+      }
+    };
+
+    loadCloudProfile();
+  </script>
+</body>
+</html>

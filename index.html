@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>الرئيسية - مانهوانا Manhwana 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #070d12;
+      --card-bg: #0b131a;
+      --border-color: #16222f;
+      --text-color: #e1e6ed;
+      --text-muted: #7c8c9e;
+      --accent-red: #e50914;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0 0 90px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+    }
+    
+    header {
+      background: var(--card-bg);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .logo-icon { background: var(--accent-red); color: #fff; font-weight: bold; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { color: #fff; font-size: 18px; font-weight: bold; }
+
+    /* زر شات مناقشة المانهوا (أحمر قرمزي داكن مائل للسواد) */
+    .chat-btn {
+      background: linear-gradient(135deg, #4a0004, #1a0002);
+      border: 1px solid #7a000b;
+      color: #ff9999;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(74, 0, 4, 0.6);
+      transition: 0.2s;
+      text-decoration: none;
+    }
+    .chat-btn:hover { border-color: var(--accent-red); color: #fff; }
+
+    .hero-slider {
+      width: 100%; max-width: 960px; margin: 15px auto; height: 210px; border-radius: 12px;
+      overflow: hidden; position: relative; background: var(--card-bg); border: 1px solid var(--border-color);
+    }
+    .hero-slide { position: absolute; top: 0; right: 0; width: 100%; height: 100%; display: flex; opacity: 0; transition: opacity 0.8s ease-in-out; }
+    .hero-slide.active { opacity: 1; }
+    .hero-img { width: 45%; height: 100%; object-fit: cover; flex-shrink: 0; }
+    .hero-content { width: 55%; padding: 15px; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(to left, var(--card-bg), transparent); }
+    .hero-title { font-size: 15px; font-weight: bold; color: #fff; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hero-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .container { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 12px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 12px 0; }
+    .section-title { color: #fff; font-size: 16px; font-weight: bold; border-right: 4px solid var(--accent-red); padding-right: 8px; }
+
+    /* شبكة عرض أكبر لتكون 3 أعمال في السطر بملء الشاشة */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+
+    .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); transition: 0.2s; position: relative; cursor: pointer; user-select: none; }
+    .card:hover { transform: translateY(-3px); border-color: var(--accent-red); }
+    .card img { width: 100%; height: 200px; object-fit: cover; display: block; }
+    .card-body { padding: 8px; }
+    .card-title { font-size: 12px; font-weight: bold; margin-bottom: 4px; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-info { font-size: 10px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
+    .imdb-badge { background: #f5c518; color: #000; padding: 1px 4px; border-radius: 3px; font-weight: bold; font-size: 9px; }
+
+    /* الشريط السفلي الموحد */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #05090d; border-top: 1px solid var(--border-color);
+      display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000;
+    }
+    .nav-item {
+      background: none; border: none; color: var(--text-muted); font-size: 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none;
+    }
+    .nav-item.active { color: #fff; }
+    .nav-item svg { width: 20px; height: 20px; fill: var(--text-muted); }
+    .nav-item.active svg { fill: var(--accent-red); }
+
+    /* زر زائد للأدمن بلون أسود فخم وحدود حمراء */
+    .admin-floating-btn {
+      position: fixed; bottom: 85px; right: 20px; width: 48px; height: 48px; border-radius: 50%;
+      background: #0b131a; color: #fff; border: 2px solid var(--accent-red); display: none;
+      align-items: center; justify-content: center; font-size: 22px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); z-index: 999;
+    }
+
+    .admin-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px; }
+    .admin-modal-content { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--accent-red); width: 100%; max-width: 380px; }
+    .admin-modal-content input, .admin-modal-content textarea {
+      width: 100%; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);
+      padding: 9px; border-radius: 6px; margin-bottom: 10px; font-size: 12px; outline: none;
+    }
+    
+    .genres-checkbox-container {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;
+      background: var(--bg-color); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); max-height: 130px; overflow-y: auto;
+    }
+    .genre-checkbox-label { font-size: 11px; color: #fff; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+
+    .btn { background: var(--accent-red); color: #fff; border: none; padding: 9px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; width: 100%; text-align: center; }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <header>
+    <div class="logo-container" onclick="location.href='index.html'">
+      <div class="logo-icon">M</div>
+      <div class="logo-text">مانهوانا</div>
+    </div>
+
+    <!-- زر شات مناقشة المانهوا (أحمر قرمزي داكن مائل للسواد) -->
+    <a href="chat.html" class="chat-btn">
+      💬 شات المناقشة
+    </a>
+  </header>
+
+  <div id="adminFloatingBtn" class="admin-floating-btn" onclick="openAdminModal('add')" title="إضافة عمل جديد">➕</div>
+
+  <div id="adminModalOverlay" class="admin-modal-overlay">
+    <div class="admin-modal-content">
+      <h3 id="modalTitleText" style="color: #fff; margin-top:0; font-size:15px;">إضافة عمل جديد ☁️</h3>
+      <input type="hidden" id="editWorkId">
+      <input type="text" id="newTitle" placeholder="اسم المانهوا / المانجا">
+      <input type="text" id="newCover" placeholder="رابط صورة الغلاف">
+      <textarea id="newDesc" placeholder="القصة..." style="height: 50px;"></textarea>
+      
+      <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 4px;">اختر التصنيفات (يمكنك اختيار أكثر من تصنيف):</label>
+      <div class="genres-checkbox-container" id="genresCheckboxGroup">
+        <label class="genre-checkbox-label"><input type="checkbox" value="أكشن"> أكشن</label>
+        <label class="genre-checkbox-label"><input type="checkbox" value="فانتزيا"> فانتزيا</label>
+        <label class="genre-checkbox-label"><input type="checkbox" value="مغامرات"> مغامرات</label>
+        <label class="genre-checkbox-label"><input type="checkbox" value="دراما"> دراما</label>
+        <label class="genre-checkbox-label"><input type="checkbox" value="رومانسي"> رومانسي</label>
+        <label class="genre-checkbox-label"><input type="checkbox" value="رعب"> رعب</label>
+        <label class="genre-checkbox-label"><input type="checkbox" value="غموض"> غموض</label>
+        <label class="genre-checkbox-label"><input type="checkbox" value="إثارة"> إثارة</label>
+      </div>
+
+      <button onclick="saveWorkData()" class="btn" style="margin-bottom:6px;">حفظ ونشر</button>
+      <button onclick="closeAdminModal()" class="btn" style="background:#333;">إلغاء</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="hero-slider" id="heroSlider"></div>
+
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title">أحدث الإضافات</div>
+      </div>
+      <div class="grid" id="manhwaGrid"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span>بحث</span>
+    </a>
+    <a href="genres.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+      <span>الإضافات</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>الحساب</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, addDoc, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
+      authDomain: "manhwastore.firebaseapp.com",
+      projectId: "manhwastore",
+      storageBucket: "manhwastore.firebasestorage.app",
+      messagingSenderId: "706758090521",
+      appId: "1:706758090521:web:f2cf72a74a9e36e5296f88",
+      measurementId: "G-MS0H0PW03Q"
+    };
+
+    let manhwaData = [];
+    const adminUsernames = ["admin", "yhya", "andrew"];
+
+    function checkAdminAuth() {
+      const user = (localStorage.getItem("currentUser") || "").toLowerCase().trim();
+      return adminUsernames.includes(user);
+    }
+
+    function applyAdminUI() {
+      document.getElementById("adminFloatingBtn").style.display = checkAdminAuth() ? "flex" : "none";
+    }
+
+    function renderGrid(list) {
+      const grid = document.getElementById("manhwaGrid");
+      grid.innerHTML = "";
+      const isAdmin = checkAdminAuth();
+
+      list.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        const genresList = Array.isArray(item.genres) ? item.genres.join(", ") : (item.genre || 'مانهوا');
+
+        card.onclick = () => {
+          location.href = `details.html?title=${encodeURIComponent(item.title)}&cover=${encodeURIComponent(item.cover)}&desc=${encodeURIComponent(item.desc || '')}&genre=${encodeURIComponent(genresList)}`;
+        };
+
+        let pressTimer;
+        card.onmousedown = card.ontouchstart = (e) => {
+          if (!isAdmin) return;
+          pressTimer = setTimeout(() => { openAdminModal('edit', item); }, 500);
+        };
+        card.onmouseup = card.ontouchend = card.onmouseleave = () => { clearTimeout(pressTimer); };
+
+        const deleteBtn = isAdmin && item.id ? `<button style="position:absolute; top:6px; right:6px; background:rgba(229,9,20,0.9); border:none; color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; z-index:5;" onclick="event.stopPropagation(); deleteItem('${item.id}')">🗑️</button>` : '';
+
+        card.innerHTML = `
+          ${deleteBtn}
+          <img src="${item.cover || 'https://via.placeholder.com/150'}" alt="${item.title}">
+          <div class="card-body">
+            <div class="card-title">${item.title}</div>
+            <div class="card-info">
+              <span>${genresList}</span>
+              <span class="imdb-badge">8.5</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderHero(list) {
+      const slider = document.getElementById("heroSlider");
+      if (!list || list.length === 0) { slider.style.display = "none"; return; }
+      slider.style.display = "block";
+      const item = list[0];
+      const genresList = Array.isArray(item.genres) ? item.genres.join(", ") : (item.genre || '');
+      slider.innerHTML = `
+        <div class="hero-slide active">
+          <img class="hero-img" src="${item.cover}" alt="${item.title}">
+          <div class="hero-content">
+            <div class="hero-title">${item.title}</div>
+            <div class="hero-desc">${item.desc || 'قصة مشوقة ومميزة.'}</div>
+            <button class="btn" style="width:90px; padding:5px; font-size:11px;" onclick="location.href='details.html?title=${encodeURIComponent(item.title)}&cover=${encodeURIComponent(item.cover)}&desc=${encodeURIComponent(item.desc || '')}&genre=${encodeURIComponent(genresList)}'">قراءة الآن</button>
+          </div>
+        </div>
+      `;
+    }
+
+    applyAdminUI();
+    let db;
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      onSnapshot(collection(db, "manhwas"), (snapshot) => {
+        manhwaData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderGrid(manhwaData);
+        renderHero(manhwaData);
+      });
+    } catch(e) {}
+
+    window.openAdminModal = function(mode, item = null) {
+      if (!checkAdminAuth()) return;
+      document.getElementById("adminModalOverlay").style.display = "flex";
+      const checkboxes = document.querySelectorAll("#genresCheckboxGroup input[type='checkbox']");
+      checkboxes.forEach(cb => cb.checked = false);
+
+      if (mode === 'edit' && item) {
+        document.getElementById("modalTitleText").innerText = "تعديل العمل ✍️";
+        document.getElementById("editWorkId").value = item.id || "";
+        document.getElementById("newTitle").value = item.title || "";
+        document.getElementById("newCover").value = item.cover || "";
+        document.getElementById("newDesc").value = item.desc || "";
+        const itemGenres = item.genres || (item.genre ? [item.genre] : []);
+        checkboxes.forEach(cb => { if (itemGenres.includes(cb.value)) cb.checked = true; });
+      } else {
+        document.getElementById("modalTitleText").innerText = "إضافة عمل جديد ☁️";
+        document.getElementById("editWorkId").value = "";
+        document.getElementById("newTitle").value = "";
+        document.getElementById("newCover").value = "";
+        document.getElementById("newDesc").value = "";
+      }
+    };
+
+    window.closeAdminModal = function() { document.getElementById("adminModalOverlay").style.display = "none"; };
+
+    window.saveWorkData = async function() {
+      if (!checkAdminAuth()) return;
+      const id = document.getElementById("editWorkId").value;
+      const title = document.getElementById("newTitle").value.trim();
+      const cover = document.getElementById("newCover").value.trim();
+      const desc = document.getElementById("newDesc").value.trim();
+      const selectedGenres = [];
+      document.querySelectorAll("#genresCheckboxGroup input[type='checkbox']:checked").forEach(cb => selectedGenres.push(cb.value));
+
+      if (!title || !cover) { alert("يرجى إدخال العنوان ورابط الغلاف!"); return; }
+
+      if (db) {
+        if (id) {
+          await updateDoc(doc(db, "manhwas", id), { title, cover, desc, genres: selectedGenres, genre: selectedGenres[0] || 'أكشن' });
+          alert("تم تعديل العمل بنجاح!");
+        } else {
+          await addDoc(collection(db, "manhwas"), { title, cover, desc, genres: selectedGenres, genre: selectedGenres[0] || 'أكشن', createdAt: new Date() });
+          alert("تمت الإضافة بنجاح!");
+        }
+      }
+      closeAdminModal();
+    };
+
+    window.deleteItem = async function(id) {
+      if (!checkAdminAuth()) return;
+      if (confirm("هل تريد حذف هذا العمل نهائياً؟") && db) {
+        await deleteDoc(doc(db, "manhwas", id));
+      }
+    };
+  </script>
+</body>
+</html>

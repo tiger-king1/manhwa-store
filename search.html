@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>بحث - مانهوانا 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #070d12;
+      --card-bg: #0b131a;
+      --border-color: #16222f;
+      --text-color: #e1e6ed;
+      --text-muted: #7c8c9e;
+      --accent-red: #e50914;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0 0 90px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .logo-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .logo-icon { background: var(--accent-red); color: #fff; font-weight: bold; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { color: #fff; font-size: 18px; font-weight: bold; }
+
+    .search-box-container {
+      padding: 20px;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 12px 45px 12px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--accent-red);
+    }
+
+    .search-icon-pos {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .results-section {
+      padding: 0 20px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media(min-width: 600px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-red);
+    }
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+    .card-body {
+      padding: 8px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+    .card-info {
+      font-size: 10px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .imdb-badge {
+      background: #f5c518;
+      color: #000;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-weight: bold;
+      font-size: 9px;
+    }
+
+    .empty-msg {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 40px 0;
+      grid-column: 1 / -1;
+    }
+
+    /* الشريط السفلي الموحد في كل الموقع */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #05090d; border-top: 1px solid var(--border-color);
+      display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000;
+    }
+    .nav-item {
+      background: none; border: none; color: var(--text-muted); font-size: 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none;
+    }
+    .nav-item.active { color: #fff; }
+    .nav-item svg { width: 20px; height: 20px; fill: var(--text-muted); }
+    .nav-item.active svg { fill: var(--accent-red); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container" onclick="location.href='index.html'">
+      <div class="logo-icon">M</div>
+      <div class="logo-text">مانهوانا</div>
+    </div>
+  </header>
+
+  <div class="search-box-container">
+    <div class="search-input-wrapper">
+      <input type="text" id="searchInput" class="search-input" placeholder="ابحث عن اسم العمل..." oninput="handleSearch()">
+      <span class="search-icon-pos">🔍</span>
+    </div>
+  </div>
+
+  <div class="results-section">
+    <div class="section-title" id="sectionTitle">الأعمال التي تمت متابعتها (المفضلة) 🗿</div>
+    <div class="grid" id="searchResultsGrid"></div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="search.html" class="nav-item active">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span>بحث</span>
+    </a>
+    <a href="genres.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+      <span>الإضافات</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>الحساب</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
+      authDomain: "manhwastore.firebaseapp.com",
+      projectId: "manhwastore",
+      storageBucket: "manhwastore.firebasestorage.app",
+      messagingSenderId: "706758090521",
+      appId: "1:706758090521:web:f2cf72a74a9e36e5296f88",
+      measurementId: "G-MS0H0PW03Q"
+    };
+
+    let allWorks = [];
+
+    // جلب قائمة المفضلة المخزنة محلياً (التي تمت متابعتها)
+    function getFavorites() {
+      return JSON.parse(localStorage.getItem("myFavorites") || "[]");
+    }
+
+    function renderGrid(items, titleText, isFav = false) {
+      document.getElementById("sectionTitle").innerText = titleText;
+      const grid = document.getElementById("searchResultsGrid");
+      grid.innerHTML = "";
+
+      if (items.length === 0) {
+        const msg = isFav ? "ليس لديك أعمال مضافة في المفضلة (المتابعة) حالياً 🗿" : "لا توجد نتائج مطابقة لبحثك ❌";
+        grid.innerHTML = `<div class='empty-msg'>${msg}</div>`;
+        return;
+      }
+
+      items.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.onclick = () => {
+          location.href = `details.html?title=${encodeURIComponent(item.title)}&cover=${encodeURIComponent(item.cover || '')}&desc=${encodeURIComponent(item.desc || '')}`;
+        };
+
+        card.innerHTML = `
+          <img src="${item.cover || 'https://via.placeholder.com/150'}" alt="${item.title}">
+          <div class="card-body">
+            <div class="card-title">${item.title}</div>
+            <div class="card-info">
+              <span>${item.genre || 'مانهوا'}</span>
+              <span class="imdb-badge">${item.rating || '8.5'}</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // تحميل الكل من فايربيز للبحث لاحقاً
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      getDocs(collection(db, "manhwas")).then((snapshot) => {
+        allWorks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      }).catch(() => {});
+    } catch(e) {}
+
+    // عند فتح الصفحة مباشرة (بدون بحث)، عرض الأعمال المتابعة (المفضلة)
+    const favs = getFavorites();
+    renderGrid(favs, "الأعمال التي تمت متابعتها (المفضلة) 🗿", true);
+
+    window.handleSearch = function() {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+
+      if (!query) {
+        const currentFavs = getFavorites();
+        renderGrid(currentFavs, "الأعمال التي تمت متابعتها (المفضلة) 🗿", true);
+        return;
+      }
+
+      // البحث في كل الأعمال المسجلة أو المفضلة
+      const filtered = allWorks.filter(item => (item.title || "").toLowerCase().includes(query));
+      renderGrid(filtered, "نتائج البحث", false);
+    };
+  </script>
+</body>
+</html>

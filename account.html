@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>الحساب - مانهوانا 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #070d12;
+      --card-bg: #0b131a;
+      --border-color: #16222f;
+      --text-color: #e1e6ed;
+      --text-muted: #7c8c9e;
+      --accent-red: #e50914;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0 0 90px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .logo-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .logo-icon { background: var(--accent-red); color: #fff; font-weight: bold; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { color: #fff; font-size: 18px; font-weight: bold; }
+
+    .profile-section {
+      padding: 25px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, #0b131a, #070d12);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .profile-info { display: flex; flex-direction: column; gap: 6px; }
+    .username-text { font-size: 22px; font-weight: bold; color: #fff; }
+    .edit-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 4px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      width: fit-content;
+      display: none;
+    }
+
+    .avatar-container {
+      width: 85px; height: 85px; border-radius: 50%; overflow: hidden; border: 2px solid var(--accent-red); flex-shrink: 0; background: #16222f;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .avatar-img { width: 100%; height: 100%; object-fit: cover; }
+    .default-avatar-icon { font-size: 40px; color: var(--text-muted); }
+
+    .menu-list { display: flex; flex-direction: column; }
+    .menu-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px; border-bottom: 1px solid var(--border-color);
+      color: #fff; font-size: 14px; background: var(--bg-color); cursor: pointer;
+    }
+    .menu-arrow { color: var(--text-muted); font-size: 14px; }
+
+    .content-box {
+      display: none; padding: 15px 20px; background: var(--card-bg); border-bottom: 1px solid var(--border-color);
+    }
+    .content-box.active { display: block; }
+    .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; margin-top: 10px; }
+    .item-card {
+      background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; text-align: center; font-size: 11px; cursor: pointer; transition: 0.2s;
+    }
+    .item-card:hover { border-color: var(--accent-red); }
+    .item-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 6px; margin-bottom: 6px; }
+
+    .auth-action-btn {
+      margin: 25px 20px; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 14px; text-align: center; cursor: pointer; transition: 0.2s;
+    }
+    .logout-style { background: rgba(229, 9, 20, 0.1); border: 1px solid var(--accent-red); color: var(--accent-red); }
+    .login-style { background: var(--accent-red); border: 1px solid var(--accent-red); color: #fff; }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #05090d; border-top: 1px solid var(--border-color);
+      display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000;
+    }
+    .nav-item {
+      background: none; border: none; color: var(--text-muted); font-size: 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none;
+    }
+    .nav-item.active { color: #fff; }
+    .nav-item svg { width: 20px; height: 20px; fill: var(--text-muted); }
+    .nav-item.active svg { fill: var(--accent-red); }
+
+    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:none; justify-content:center; align-items:center; z-index:2000; padding:15px; }
+    .modal-card { background:var(--card-bg); padding:20px; border-radius:12px; border:1px solid var(--border-color); width:100%; max-width:350px; }
+    .modal-card input { width:100%; background:var(--bg-color); border:1px solid var(--border-color); color:#fff; padding:10px; border-radius:6px; margin-bottom:10px; font-size:12px; outline:none; }
+    .modal-btn { background:var(--accent-red); color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; font-size:12px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container" onclick="location.href='index.html'">
+      <div class="logo-icon">M</div>
+      <div class="logo-text">مانهوانا</div>
+    </div>
+  </header>
+
+  <div class="profile-section">
+    <div class="profile-info">
+      <div class="username-text" id="usernameDisplay">زائر</div>
+      <button class="edit-btn" id="editProfileBtn" onclick="location.href='profile-edit.html'">تعديل</button>
+    </div>
+    <div class="avatar-container" id="avatarBox"></div>
+  </div>
+
+  <div class="menu-list">
+    <div class="menu-item req-auth" id="notificationsMenuItem" onclick="toggleSection('notificationsBox')">
+      <span>الإشعارات</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div id="notificationsBox" class="content-box">
+      <div style="font-size:12px; color:var(--text-muted);">لا توجد إشعارات جديدة.</div>
+    </div>
+
+    <div class="menu-item" onclick="toggleSection('subscriptionsBox')">
+      <span>الإشتراكات</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div id="subscriptionsBox" class="content-box">
+      <div style="font-size:12px; color:var(--text-muted);">أنت تتردد على النسخة المجانية الكاملة.</div>
+    </div>
+
+    <div class="menu-item" onclick="toggleSection('downloadsBox')">
+      <span>التحميلات</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div id="downloadsBox" class="content-box">
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">الفصول المحملة (قراءة بدون نت):</div>
+      <div id="downloadsList" class="items-grid"></div>
+    </div>
+
+    <div class="menu-item" onclick="toggleSection('favoritesBox')">
+      <span>القوائم والمفضلة</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div id="favoritesBox" class="content-box">
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">الأعمال المحفوظة في مفضلتك:</div>
+      <div id="favoritesList" class="items-grid"></div>
+    </div>
+
+    <div class="menu-item req-auth" id="settingsMenuItem" onclick="toggleSection('settingsBox')">
+      <span>الاعدادات</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div id="settingsBox" class="content-box">
+      <div style="font-size:12px; color:var(--text-muted);">إعدادات الحساب والنظام حصرية.</div>
+    </div>
+
+    <div class="menu-item" onclick="alert('مانهوانا الإصدار 1.0.0')">
+      <span>المساعدة والدعم</span>
+      <span class="menu-arrow">›</span>
+    </div>
+  </div>
+
+  <div id="mainAuthBtn" class="auth-action-btn" onclick="handleAuthAction()">تسجيل الخروج</div>
+
+  <div id="authModal" class="modal-overlay">
+    <div class="modal-card">
+      <h3 style="margin-top:0; font-size:14px; color:#fff;">تسجيل الدخول 🔑</h3>
+      <input type="text" id="authUsername" placeholder="اسم المستخدم">
+      <input type="password" id="authPassword" placeholder="كلمة السر">
+      <button class="modal-btn" onclick="processLogin()" style="margin-bottom:6px;">دخول</button>
+      <button class="modal-btn" onclick="closeModal('authModal')" style="background:#333;">إلغاء</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span>بحث</span>
+    </a>
+    <a href="genres.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+      <span>الإضافات</span>
+    </a>
+    <a href="account.html" class="nav-item active">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>الحساب</span>
+    </a>
+  </nav>
+
+  <script>
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS = "htibss41";
+
+    let currentUser = localStorage.getItem("currentUser") || "زائر";
+    let adminAvatar = localStorage.getItem("adminAvatar") || "";
+
+    function setupPageRole() {
+      const usernameEl = document.getElementById("usernameDisplay");
+      const avatarBox = document.getElementById("avatarBox");
+      const editBtn = document.getElementById("editProfileBtn");
+      const notifItem = document.getElementById("notificationsMenuItem");
+      const settingsItem = document.getElementById("settingsMenuItem");
+      const mainBtn = document.getElementById("mainAuthBtn");
+
+      if (currentUser.toLowerCase() === ADMIN_USER) {
+        usernameEl.innerText = ADMIN_USER;
+        if (adminAvatar) {
+          avatarBox.innerHTML = `<img class="avatar-img" src="${adminAvatar}" alt="Admin Avatar">`;
+        } else {
+          avatarBox.innerHTML = `<div class="default-avatar-icon">👤</div>`;
+        }
+        editBtn.style.display = "inline-block";
+        notifItem.style.display = "flex";
+        settingsItem.style.display = "flex";
+
+        mainBtn.innerText = "تسجيل الخروج";
+        mainBtn.className = "auth-action-btn logout-style";
+      } else {
+        usernameEl.innerText = "زائر";
+        avatarBox.innerHTML = `<div class="default-avatar-icon">👤</div>`;
+        editBtn.style.display = "none";
+        notifItem.style.display = "none";
+        settingsItem.style.display = "none";
+
+        mainBtn.innerText = "تسجيل الدخول";
+        mainBtn.className = "auth-action-btn login-style";
+      }
+    }
+
+    window.toggleSection = function(id) {
+      const box = document.getElementById(id);
+      const isVisible = box.classList.contains("active");
+      document.querySelectorAll('.content-box').forEach(b => b.classList.remove('active'));
+      if (!isVisible) box.classList.add('active');
+    };
+
+    window.closeModal = function(id) {
+      document.getElementById(id).style.display = "none";
+    };
+
+    window.handleAuthAction = function() {
+      if (currentUser.toLowerCase() === ADMIN_USER) {
+        localStorage.setItem("currentUser", "زائر");
+        currentUser = "زائر";
+        setupPageRole();
+        alert("تم تسجيل الخروج بنجاح!");
+      } else {
+        document.getElementById("authModal").style.display = "flex";
+      }
+    };
+
+    window.processLogin = function() {
+      const u = document.getElementById("authUsername").value.trim();
+      const p = document.getElementById("authPassword").value.trim();
+
+      if (u.toLowerCase() === ADMIN_USER && p === ADMIN_PASS) {
+        localStorage.setItem("currentUser", ADMIN_USER);
+        currentUser = ADMIN_USER;
+        setupPageRole();
+        closeModal("authModal");
+        alert("أهلاً بك يا أدمن 🗿🔥");
+      } else {
+        alert("اسم المستخدم أو كلمة السر غير صحيحة!");
+      }
+    };
+
+    function loadSavedData() {
+      const downloads = JSON.parse(localStorage.getItem("myDownloads") || '[]');
+      const favs = JSON.parse(localStorage.getItem("myFavorites") || '[]');
+
+      const downListEl = document.getElementById("downloadsList");
+      downListEl.innerHTML = downloads.length ? "" : "<span style='font-size:11px; color:#888;'>لا توجد تحميلات</span>";
+      downloads.forEach(item => {
+        const chapNum = item.chapter || '1';
+        downListEl.innerHTML += `
+          <div class="item-card" onclick="location.href='reader.html?title=${encodeURIComponent(item.title)}&chapter=${chapNum}'">
+            <img src="${item.cover}">
+            <div>${item.title} - الفصل ${chapNum}</div>
+          </div>
+        `;
+      });
+
+      const favListEl = document.getElementById("favoritesList");
+      favListEl.innerHTML = favs.length ? "" : "<span style='font-size:11px; color:#888;'>لا توجد مفضلة</span>";
+      favs.forEach(item => {
+        favListEl.innerHTML += `
+          <div class="item-card" onclick="location.href='details.html?title=${encodeURIComponent(item.title)}&cover=${encodeURIComponent(item.cover)}'">
+            <img src="${item.cover}">
+            <div>${item.title}</div>
+          </div>
+        `;
+      });
+    }
+
+    setupPageRole();
+    loadSavedData();
+  </script>
+</body>
+</html>

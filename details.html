@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>تفاصيل العمل - مانهوانا 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #070d12;
+      --card-bg: #0b131a;
+      --border-color: #16222f;
+      --text-color: #e1e6ed;
+      --text-muted: #7c8c9e;
+      --accent-red: #e50914;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0 0 90px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(7, 13, 18, 0.9), transparent);
+    }
+    .nav-btn { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; }
+    .header-title { font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+
+    .hero-banner {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .hero-banner::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, rgba(7, 13, 18, 0.2) 0%, rgba(7, 13, 18, 0.85) 75%, var(--bg-color) 100%);
+    }
+
+    .hero-content { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
+    
+    .hero-title { font-size: 20px; font-weight: bold; margin-bottom: 6px; color: #fff; }
+    
+    .hero-meta {
+      display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); margin-bottom: 10px;
+    }
+    .imdb-badge { background: #f5c518; color: #000; padding: 1px 5px; border-radius: 3px; font-weight: bold; font-size: 11px; }
+
+    .season-tag { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 15px; }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 25px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .action-icon-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: none; border: none; color: #fff; font-size: 11px; cursor: pointer;
+      user-select: none; transition: 0.2s;
+    }
+    .action-icon-btn .icon-symbol { font-size: 22px; font-weight: bold; line-height: 1; }
+    .action-icon-btn.saved { color: #2ecc71; }
+
+    .play-now-btn {
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      padding: 10px 32px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(229, 9, 20, 0.5);
+    }
+
+    .details-body { padding: 0 20px; }
+    .work-description { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 15px; }
+
+    .feedback-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 20px;
+      color: var(--text-color);
+      margin-bottom: 20px;
+      user-select: none;
+    }
+
+    .btn-vote {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      padding: 0;
+    }
+
+    .vote-icon {
+      width: 22px;
+      height: 22px;
+      fill: #8c96a5;
+      transition: 0.2s;
+    }
+
+    .btn-vote.active-like .vote-icon { fill: #3ea6ff; }
+    .btn-vote.active-like { color: #3ea6ff; }
+
+    .btn-vote.active-dislike .vote-icon { fill: #e50914; }
+    .btn-vote.active-dislike { color: #e50914; }
+
+    .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .section-title { font-size: 18px; font-weight: bold; }
+
+    .seasons-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+    .season-btn {
+      background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);
+      padding: 6px 18px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; white-space: nowrap;
+    }
+    .season-btn.active { border-color: #fff; color: #fff; background: rgba(255,255,255,0.05); }
+
+    .admin-add-btn { background: var(--accent-red); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: none; }
+
+    .episodes-list { display: flex; flex-direction: column; gap: 12px; }
+    .episode-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .episode-card:hover { border-color: var(--accent-red); }
+    .episode-info { display: flex; flex-direction: column; gap: 5px; }
+    .episode-title { font-size: 14px; font-weight: bold; color: #fff; }
+    .episode-sub { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+
+    .episode-thumb-box {
+      width: 110px; height: 65px; border-radius: 8px; overflow: hidden; position: relative; background: #000; flex-shrink: 0;
+    }
+    .episode-thumb { width: 100%; height: 100%; object-fit: cover; }
+    .play-overlay {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
+    }
+    .play-overlay-icon {
+      width: 26px; height: 26px; background: var(--accent-red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px;
+    }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #05090d; border-top: 1px solid var(--border-color);
+      display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000;
+    }
+    .nav-item {
+      background: none; border: none; color: var(--text-muted); font-size: 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none;
+    }
+    .nav-item.active { color: #fff; }
+    .nav-item svg { width: 20px; height: 20px; fill: var(--text-muted); }
+
+    .admin-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px; }
+    .admin-modal-content { background: var(--card-bg); padding: 16px; border-radius: 12px; border: 1px solid var(--accent-red); width: 100%; max-width: 380px; }
+    .admin-modal-content input, .admin-modal-content textarea {
+      width: 100%; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color);
+      padding: 9px; border-radius: 6px; margin-bottom: 10px; font-size: 12px; outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <button class="nav-btn" onclick="history.back()">➔</button>
+    <div class="header-title" id="headerTitle">اسم العمل</div>
+    <div style="width:24px;"></div>
+  </header>
+
+  <div class="hero-banner" id="heroBanner">
+    <div class="hero-content">
+      <div class="hero-title" id="workTitle">اسم العمل</div>
+      <div class="hero-meta">
+        <span>2026</span> • <span>أكشن | مغامرات</span> • <span class="imdb-badge">IMDb 8.6</span>
+      </div>
+      <div class="season-tag">الموسم 1 الفصل 1</div>
+
+      <div class="hero-actions">
+        <button class="action-icon-btn" id="watchLaterBtn" onclick="toggleWatchLater()">
+          <span class="icon-symbol" id="watchLaterIcon">+</span>
+          <span id="watchLaterText">المشاهدة لاحقاً</span>
+        </button>
+
+        <button class="play-now-btn" onclick="openReader('1')">
+          ► شاهد الآن
+        </button>
+
+        <button class="action-icon-btn" onclick="downloadAllChapters()">
+          <span class="icon-symbol">↓</span>
+          <span>تحميل</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="details-body">
+    <div class="work-description" id="workDesc">
+      وصف العمل وقصته تظهر هنا...
+    </div>
+
+    <div class="feedback-row">
+      <button class="btn-vote" id="dislikeBtn" onclick="handleDislike()">
+        <span id="dislikeCount">0</span>
+        <svg class="vote-icon" viewBox="0 0 24 24">
+          <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm0 12l-4.34 4.34L11.83 14H3v-2l3-7h9v10zm4-12h4v12h-4z"/>
+        </svg>
+      </button>
+
+      <button class="btn-vote" id="likeBtn" onclick="handleLike()">
+        <span id="likeCount">0</span>
+        <svg class="vote-icon" viewBox="0 0 24 24">
+          <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.58 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2zM21 12l-3 7H9V9l4.34-4.34L12.17 10H21v2z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="section-header-row">
+      <div class="section-title">الحلقات</div>
+      <button id="addChapterBtn" class="admin-add-btn" onclick="openModal()">➕ إضافة فصل</button>
+    </div>
+
+    <div class="seasons-bar">
+      <button class="season-btn active">الموسم 1</button>
+      <button class="season-btn">الموسم 2</button>
+    </div>
+
+    <div class="episodes-list" id="episodesList"></div>
+  </div>
+
+  <div id="adminModal" class="admin-modal-overlay">
+    <div class="admin-modal-content">
+      <h3 style="color: #fff; margin-top:0; font-size:15px;">إضافة فصل جديد 📄</h3>
+      <input type="text" id="chapNum" placeholder="رقم الفصل (مثال: 1)">
+      <textarea id="chapImgs" placeholder="روابط الصور..." style="height: 80px;"></textarea>
+      <button onclick="addChapter()" style="background:var(--accent-red); color:#fff; border:none; padding:8px; border-radius:6px; width:100%; font-weight:bold; cursor:pointer; margin-bottom:6px;">نشر الفصل</button>
+      <button onclick="closeModal()" style="background:#333; color:#fff; border:none; padding:8px; border-radius:6px; width:100%; cursor:pointer;">إلغاء</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>الرئيسية</span>
+    </a>
+    <a href="search.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span>بحث</span>
+    </a>
+    <a href="genres.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+      <span>الأقسام</span>
+    </a>
+    <a href="account.html" class="nav-item">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>الحساب</span>
+    </a>
+  </nav>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const title = urlParams.get('title') || 'اسم العمل';
+    const cover = urlParams.get('cover') || 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800';
+    const desc = urlParams.get('desc') || 'قصة العمل التفصيلية...';
+
+    document.getElementById("headerTitle").innerText = title;
+    document.getElementById("workTitle").innerText = title;
+    document.getElementById("workDesc").innerText = desc;
+    document.getElementById("heroBanner").style.backgroundImage = `url('${cover}')`;
+
+    // دالة فتح صفحة القراءة للفصل المحدد
+    window.openReader = function(chapterNum) {
+      window.location.href = `reader.html?title=${encodeURIComponent(title)}&chapter=${chapterNum}&cover=${encodeURIComponent(cover)}`;
+    };
+
+    let likes = 0;
+    let dislikes = 0;
+    let userVoted = null;
+
+    function handleLike() {
+      const likeBtn = document.getElementById("likeBtn");
+      const dislikeBtn = document.getElementById("dislikeBtn");
+      if (userVoted === 'like') {
+        likes--; userVoted = null; likeBtn.classList.remove("active-like");
+      } else {
+        if (userVoted === 'dislike') { dislikes--; dislikeBtn.classList.remove("active-dislike"); }
+        likes++; userVoted = 'like'; likeBtn.classList.add("active-like");
+      }
+      document.getElementById("likeCount").innerText = likes;
+      document.getElementById("dislikeCount").innerText = dislikes;
+    }
+
+    function handleDislike() {
+      const likeBtn = document.getElementById("likeBtn");
+      const dislikeBtn = document.getElementById("dislikeBtn");
+      if (userVoted === 'dislike') {
+        dislikes--; userVoted = null; dislikeBtn.classList.remove("active-dislike");
+      } else {
+        if (userVoted === 'like') { likes--; likeBtn.classList.remove("active-like"); }
+        dislikes++; userVoted = 'dislike'; dislikeBtn.classList.add("active-dislike");
+      }
+      document.getElementById("likeCount").innerText = likes;
+      document.getElementById("dislikeCount").innerText = dislikes;
+    }
+
+    let isSaved = false;
+    function toggleWatchLater() {
+      const btn = document.getElementById("watchLaterBtn");
+      const icon = document.getElementById("watchLaterIcon");
+      const text = document.getElementById("watchLaterText");
+      let favs = JSON.parse(localStorage.getItem("myFavorites") || "[]");
+
+      if (!isSaved) {
+        isSaved = true; icon.innerText = "✓"; text.innerText = "محفوظ"; btn.classList.add("saved");
+        favs.push({ title: title, cover: cover });
+        alert("تمت الإضافة إلى المفضلة بنجاح!");
+      } else {
+        isSaved = false; icon.innerText = "+"; text.innerText = "المشاهدة لاحقاً"; btn.classList.remove("saved");
+        favs = favs.filter(item => item.title !== title);
+      }
+      localStorage.setItem("myFavorites", JSON.stringify(favs));
+    }
+
+    function downloadAllChapters() {
+      let downloads = JSON.parse(localStorage.getItem("myDownloads") || "[]");
+      downloads.push({ title: title + " - الفصل 1", cover: cover });
+      localStorage.setItem("myDownloads", JSON.stringify(downloads));
+      alert("تم حفظ الفصل في قائمة التحميلات بحسابك! ⬇️");
+    }
+
+    const adminUsernames = ["admin", "yhya", "andrew"];
+    const currentUser = (localStorage.getItem("currentUser") || "").toLowerCase().trim();
+    if (adminUsernames.includes(currentUser)) {
+      document.getElementById("addChapterBtn").style.display = "block";
+    }
+
+    let chapters = [
+      { id: '1', num: '1' },
+      { id: '2', num: '2' }
+    ];
+
+    function renderChapters() {
+      const list = document.getElementById("episodesList");
+      list.innerHTML = "";
+      chapters.forEach(c => {
+        const delBtn = adminUsernames.includes(currentUser) ? `<button onclick="event.stopPropagation(); deleteChap('${c.id}')" style="background:#e50914; border:none; color:#fff; border-radius:4px; padding:2px 6px; font-size:10px; cursor:pointer;">حذف 🗑️</button>` : '';
+        
+        const div = document.createElement("div");
+        div.className = "episode-card";
+        // عند الضغط على كرت الفصل ينفتح القارئ مباشرة
+        div.onclick = () => openReader(c.num);
+        
+        div.innerHTML = `
+          <div class="episode-info">
+            <div class="episode-sub">
+              <span>↓</span>
+              <span>${delBtn}</span>
+            </div>
+            <div class="episode-title">${title}</div>
+            <div style="font-size:12px; color:var(--text-muted);">الحلقة / الفصل ${c.num}</div>
+          </div>
+          <div class="episode-thumb-box">
+            <img class="episode-thumb" src="${cover}" alt="">
+            <div class="play-overlay">
+              <div class="play-overlay-icon">►</div>
+            </div>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    renderChapters();
+
+    window.openModal = () => document.getElementById("adminModal").style.display = "flex";
+    window.closeModal = () => document.getElementById("adminModal").style.display = "none";
+    
+    window.addChapter = () => {
+      const num = document.getElementById("chapNum").value.trim();
+      if(!num) return alert("أدخل الرقم");
+      chapters.push({ id: Date.now().toString(), num: num });
+      renderChapters();
+      closeModal();
+    };
+
+    window.deleteChap = (id) => {
+      if(confirm("حذف هذا الفصل؟")) {
+        chapters = chapters.filter(c => c.id !== id);
+        renderChapters();
+      }
+    };
+  </script>
+</body>
+</html>

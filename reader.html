@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>قارئ الفصول - مانهوانا 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #070d12;
+      --card-bg: #0b131a;
+      --border-color: #16222f;
+      --text-color: #e1e6ed;
+      --text-muted: #7c8c9e;
+      --accent-red: #e50914;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0 0 60px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: rgba(11, 19, 26, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .back-btn { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; }
+    .reader-title { font-size: 14px; font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+
+    .admin-reader-upload {
+      display: none;
+      background: var(--card-bg);
+      border: 1px dashed var(--accent-red);
+      padding: 15px;
+      margin: 15px auto;
+      max-width: 600px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .upload-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .save-chapter-btn {
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      padding: 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .pages-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .chapter-page {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .empty-chapter {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 80px 20px;
+    }
+
+    /* نافذة التحميل المنبثقة */
+    .loading-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center;
+      z-index: 3000; flex-direction: column; gap: 15px; color: #fff; font-weight: bold; font-size: 14px;
+    }
+    .spinner {
+      width: 40px; height: 40px; border: 4px solid var(--border-color); border-top: 4px solid var(--accent-red);
+      border-radius: 50%; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <button class="back-btn" onclick="history.back()">←</button>
+    <div class="reader-title" id="readerHeaderTitle">جاري التحميل...</div>
+    <div style="font-size: 11px; color: var(--text-muted);" id="chapterLabel">الفصل</div>
+  </header>
+
+  <!-- نافذة التحميل عند الرفع -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div id="loadingText">جاري رفع الفصل للسيرفر ليراه الجميع... ⏳</div>
+  </div>
+
+  <!-- لوحة الأدمن -->
+  <div id="adminUploadPanel" class="admin-reader-upload">
+    <div style="font-size: 13px; font-weight: bold; color: #fff; margin-bottom: 5px;">لوحة الأدمن: رفع صفحات الفصل (لكل الزوار) 📁🔥</div>
+    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">اختر صور متعددة من المعرض، ثم اضغط حفظ.</div>
+    
+    <input type="file" id="readerImagesInput" accept="image/*" multiple style="display: none;">
+    <button class="upload-btn" onclick="document.getElementById('readerImagesInput').click()">اختر الصور من المعرض (متعددة)</button>
+    
+    <div id="readerUploadStatus" style="font-size: 12px; color: #f5c518; margin-top: 10px; font-weight: bold;">لم يتم اختيار أي صور بعد.</div>
+    
+    <button id="saveChapterBtn" class="save-chapter-btn" style="display: none;" onclick="saveAndPublishChapterToCloud()">نشر الفصل وحفظه للجميع 🚀</button>
+  </div>
+
+  <!-- صفحات الفصل -->
+  <div class="pages-container" id="pagesContainer">
+    <div class="empty-chapter">جاري جلب صفحات الفصل من السيرفر... 🗿</div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
+      authDomain: "manhwastore.firebaseapp.com",
+      projectId: "manhwastore",
+      storageBucket: "manhwastore.firebasestorage.app",
+      messagingSenderId: "706758090521",
+      appId: "1:706758090521:web:f2cf72a74a9e36e5296f88",
+      measurementId: "G-MS0H0PW03Q"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const workTitle = urlParams.get("title") || "العمل";
+    const chapterNum = urlParams.get("chapter") || "1";
+
+    document.getElementById("readerHeaderTitle").innerText = workTitle;
+    document.getElementById("chapterLabel").innerText = `الفصل ${chapterNum}`;
+
+    const adminUsernames = ["admin", "yhya", "andrew"];
+    let currentUser = (localStorage.getItem("currentUser") || "زائر").trim().toLowerCase();
+    let tempSelectedPages = [];
+
+    if (adminUsernames.includes(currentUser)) {
+      document.getElementById("adminUploadPanel").style.display = "block";
+    }
+
+    const docId = `${workTitle}_ch_${chapterNum}`.replace(/\s+/g, '_');
+
+    async function fetchChapterPages() {
+      const container = document.getElementById("pagesContainer");
+      try {
+        const docRef = doc(db, "chapters", docId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists() && docSnap.data().pages && docSnap.data().pages.length > 0) {
+          const pages = docSnap.data().pages;
+          container.innerHTML = "";
+          pages.forEach((imgSrc) => {
+            const img = document.createElement("img");
+            img.className = "chapter-page";
+            img.src = imgSrc;
+            container.appendChild(img);
+          });
+        } else {
+          container.innerHTML = `<div class="empty-chapter">لم يتم نشر صفحات لهذا الفصل بعد ❌<br><span style="font-size:10px; color:#555;">(إذا كنت أدمن، اختر الصور من لوحة الرفع بالأعلى وانقر نشر)</span></div>`;
+        }
+      } catch (error) {
+        container.innerHTML = `<div class="empty-chapter">حدث خطأ أثناء جلب الفصل من السيرفر.</div>`;
+      }
+    }
+
+    document.getElementById("readerImagesInput").addEventListener("change", function(event) {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        tempSelectedPages = [];
+        const statusEl = document.getElementById("readerUploadStatus");
+        statusEl.innerText = `جاري تجهيز ${files.length} صورة من المعرض... ⏳`;
+        let processed = 0;
+
+        Array.from(files).forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            tempSelectedPages.push(e.target.result);
+            processed++;
+
+            if (processed === files.length) {
+              statusEl.innerText = `تم تجهيز ${files.length} صورة بنجاح! جاهزة للنشر ✅`;
+              document.getElementById("saveChapterBtn").style.display = "block";
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    });
+
+    window.saveAndPublishChapterToCloud = async function() {
+      if (!adminUsernames.includes(currentUser)) {
+        alert("غير مسموح لك بهذا الإجراء!");
+        return;
+      }
+
+      if (tempSelectedPages.length === 0) {
+        alert("يرجى اختيار الصور من المعرض أولاً!");
+        return;
+      }
+
+      // إظهار شاشة التحميل
+      document.getElementById("loadingOverlay").style.display = "flex";
+
+      try {
+        await setDoc(doc(db, "chapters", docId), {
+          title: workTitle,
+          chapter: chapterNum,
+          pages: tempSelectedPages,
+          createdAt: new Date().toISOString()
+        });
+
+        document.getElementById("loadingOverlay").style.display = "none";
+        alert("تم نشر الفصل بنجاح وأصبح متاحاً لجميع الزوار 🚀🗿!");
+        document.getElementById("saveChapterBtn").style.display = "none";
+        document.getElementById("readerUploadStatus").innerText = "تم النشر بنجاح للجميع!";
+        fetchChapterPages();
+      } catch (error) {
+        document.getElementById("loadingOverlay").style.display = "none";
+        alert("حدث خطأ أثناء الرفع للسيرفر: " + error.message);
+      }
+    };
+
+    fetchChapterPages();
+  </script>
+</body>
+</html>

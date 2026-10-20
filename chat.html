@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>شات مناقشة المانهوا - مانهوانا 🗿🔥</title>
+  <style>
+    :root {
+      --bg-color: #070d12;
+      --card-bg: #0b131a;
+      --border-color: #16222f;
+      --text-color: #e1e6ed;
+      --text-muted: #7c8c9e;
+      --accent-red: #e50914;
+      --gold: #f5c518;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+    }
+
+    header {
+      background: rgba(11, 19, 26, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+    }
+    .back-btn { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; }
+    .header-title { font-size: 15px; font-weight: bold; color: #fff; }
+
+    /* حاوية الرسائل */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(7, 13, 18, 0.85); /* طبقة تعتيم لظهور خلفية الشات المخصصة بوضوح */
+    }
+
+    /* تصميم رسالة الشات بلون أسود فخم */
+    .message-bubble {
+      background: #000000;
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 80%;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .message-bubble.my-message {
+      align-self: flex-start;
+      border-right: 3px solid var(--accent-red);
+    }
+    .message-bubble.other-message {
+      align-self: flex-end;
+      border-left: 3px solid #333;
+    }
+
+    .msg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+    .msg-user { font-weight: bold; color: var(--accent-red); }
+    .msg-time { color: var(--text-muted); font-size: 9px; }
+
+    /* الرد المقتبس باللون الذهبي */
+    .reply-quote-box {
+      background: rgba(245, 197, 24, 0.08);
+      border-right: 2px solid var(--gold);
+      padding: 5px 8px;
+      margin-bottom: 6px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .reply-quote-user { font-size: 10px; font-weight: bold; color: var(--gold); }
+    .reply-quote-text { font-size: 10px; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .msg-text { font-size: 13px; color: #fff; word-break: break-word; line-height: 1.4; }
+    .msg-img { max-width: 100%; border-radius: 8px; margin-top: 6px; display: block; max-height: 200px; object-fit: cover; }
+    .edited-badge { font-size: 9px; color: var(--text-muted); margin-right: 4px; }
+    .deleted-msg { color: var(--text-muted); font-style: italic; font-size: 12px; }
+
+    /* شريط الرد المعلق فوق حقل الكتابة */
+    .reply-preview-bar {
+      display: none;
+      background: #0b131a;
+      border-top: 1px solid var(--border-color);
+      padding: 6px 15px;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--gold);
+    }
+
+    /* صندوق الإدخال السفلي */
+    .chat-input-area {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border-color);
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      outline: none;
+    }
+    .chat-input:focus { border-color: var(--accent-red); }
+
+    .action-icon-btn {
+      background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 5px;
+    }
+    .action-icon-btn:hover { color: #fff; }
+
+    .send-btn {
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 14px; flex-shrink: 0;
+    }
+
+    /* قائمة خيارات الرسالة (تعديل وحذف) */
+    .msg-options {
+      display: flex; gap: 8px; margin-top: 6px; font-size: 10px; justify-content: flex-end;
+    }
+    .msg-opt-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 2px 4px; }
+    .msg-opt-btn:hover { color: #fff; }
+  </style>
+</head>
+<body id="chatBody">
+
+  <header>
+    <button class="back-btn" onclick="history.back()">←</button>
+    <div class="header-title">شات مناقشة المانهوا 💬 (اضغط مطولاً على الخلفية لتغييرها)</div>
+  </header>
+
+  <!-- حاوية الرسائل -->
+  <div class="chat-messages" id="messagesContainer">
+    <div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 20px;">أهلاً بك في شات المانهوا الرسمي! ابدأ النقاش بحماس 🚀🗿</div>
+  </div>
+
+  <!-- شريط الرد المؤقت -->
+  <div class="reply-preview-bar" id="replyPreviewBar">
+    <span id="replyingToText">الرد على: ...</span>
+    <button onclick="cancelReply()" style="background:none; border:none; color:#fff; cursor:pointer; font-weight:bold;">✕</button>
+  </div>
+
+  <!-- صندوق الكتابة وإرسال الصور -->
+  <div class="chat-input-area">
+    <input type="file" id="chatImageInput" accept="image/*" style="display: none;" onchange="handleChatImageUpload(event)">
+    <button class="action-icon-btn" onclick="document.getElementById('chatImageInput').click()" title="إرسال صورة أو ملصق من المعرض">📷</button>
+    
+    <input type="text" id="messageInput" class="chat-input" placeholder="اكتب رسالتك هنا..." onkeydown="if(event.key === 'Enter') sendMessage()">
+    <button class="send-btn" onclick="sendMessage()">➤</button>
+  </div>
+
+  <!-- مخفي لتغيير خلفية الشات من المعرض -->
+  <input type="file" id="bgImageInput" accept="image/*" style="display: none;" onchange="changeChatBg(event)">
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, updateDoc, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZmtucnCz49Z0nqX4luO5Ct7yvyHkLQVg",
+      authDomain: "manhwastore.firebaseapp.com",
+      projectId: "manhwastore",
+      storageBucket: "manhwastore.firebasestorage.app",
+      messagingSenderId: "706758090521",
+      appId: "1:706758090521:web:f2cf72a74a9e36e5296f88",
+      measurementId: "G-MS0H0PW03Q"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const currentUser = (localStorage.getItem("currentUser") || "زائر").trim();
+    const adminUsernames = ["admin", "yhya", "andrew"];
+    const isAdmin = adminUsernames.includes(currentUser.toLowerCase());
+
+    let replyingTo = null; // يحمل بيانات الرسالة المردود عليها
+    let editingMsgId = null; // يحمل معرف الرسالة قيد التعديل
+    let tempImageBase64 = "";
+
+    // استرجاع خلفية الشات المحفوظة محلياً
+    const savedBg = localStorage.getItem("chatCustomBg");
+    if (savedBg) {
+      document.getElementById("chatBody").style.backgroundImage = `url(${savedBg})`;
+    }
+
+    // الضغط المطول (ثانية كاملة) على خلفية الشات لتغييرها
+    let pressTimer;
+    document.body.addEventListener("mousedown", (e) => {
+      if (e.target.tagName === 'BODY' || e.target.id === 'messagesContainer') {
+        pressTimer = setTimeout(() => {
+          document.getElementById("bgImageInput").click();
+        }, 1000);
+      }
+    });
+    document.body.addEventListener("mouseup", () => clearTimeout(pressTimer));
+    document.body.addEventListener("touchstart", (e) => {
+      if (e.target.tagName === 'BODY' || e.target.id === 'messagesContainer') {
+        pressTimer = setTimeout(() => {
+          document.getElementById("bgImageInput").click();
+        }, 1000);
+      }
+    });
+    document.body.addEventListener("touchend", () => clearTimeout(pressTimer));
+
+    window.changeChatBg = function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const bgData = e.target.result;
+          localStorage.setItem("chatCustomBg", bgData);
+          document.getElementById("chatBody").style.backgroundImage = `url(${bgData})`;
+          alert("تم تغيير خلفية الشات بنجاح! 🖼️✨");
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    // معالجة رفع الصور أو الملصقات من المعرض
+    window.handleChatImageUpload = function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          tempImageBase64 = e.target.result;
+          alert("تم إرفاق الصورة بنجاح! اكتب رسالتك واضغط إرسال 📷");
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    // إرسال أو تعديل الرسالة
+    window.sendMessage = async function() {
+      const input = document.getElementById("messageInput");
+      const text = input.value.trim();
+
+      if (!text && !tempImageBase64) return;
+
+      if (editingMsgId) {
+        // تعديل رسالة موجودة
+        try {
+          await updateDoc(doc(db, "chatMessages", editingMsgId), {
+            text: text,
+            isEdited: true
+          });
+          editingMsgId = null;
+          input.value = "";
+        } catch (e) {
+          alert("خطأ في التعديل");
+        }
+        return;
+      }
+
+      // إرسال رسالة جديدة
+      const msgData = {
+        user: currentUser,
+        text: text,
+        image: tempImageBase64 || "",
+        createdAt: new Date().toISOString(),
+        replyTo: replyingTo ? { id: replyingTo.id, user: replyingTo.user, text: replyingTo.text } : null,
+        isDeleted: false,
+        isEdited: false
+      };
+
+      try {
+        await addDoc(collection(db, "chatMessages"), msgData);
+        input.value = "";
+        tempImageBase64 = "";
+        cancelReply();
+      } catch (e) {
+        alert("فشل إرسال الرسالة");
+      }
+    };
+
+    // جلب وعرض الرسائل لحظياً من Firebase مع الترتيب الزمني
+    const q = query(collection(db, "chatMessages"), orderBy("createdAt", "asc"));
+    onSnapshot(q, (snapshot) => {
+      const container = document.getElementById("messagesContainer");
+      container.innerHTML = "";
+
+      if (snapshot.empty) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 20px;">لا توجد رسائل بعد. كن أول المتحدثين! 🚀</div>`;
+        return;
+      }
+
+      snapshot.forEach((docSnap) => {
+        const msg = { id: docSnap.id, ...docSnap.data() };
+        const isMyMsg = msg.user === currentUser;
+        const bubble = document.createElement("div");
+        bubble.className = `message-bubble ${isMyMsg ? 'my-message' : 'other-message'}`;
+        bubble.id = `msg_${msg.id}`;
+
+        let timeStr = "";
+        if (msg.createdAt) {
+          const d = new Date(msg.createdAt);
+          timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        if (msg.isDeleted) {
+          bubble.innerHTML = `<div class="deleted-msg">تم حذف الرسالة 🚫</div>`;
+        } else {
+          // بناء محتوى الرد الذهبي إذا كان موجوداً
+          let replyHtml = "";
+          if (msg.replyTo) {
+            replyHtml = `
+              <div class="reply-quote-box" onclick="scrollToMessage('${msg.replyTo.id}')">
+                <div class="reply-quote-user">↩ ${msg.replyTo.user}</div>
+                <div class="reply-quote-text">${msg.replyTo.text || 'صورة 📷'}</div>
+              </div>
+            `;
+          }
+
+          // بناء أزرار التحكم (رد، تعديل، حذف)
+          let optionsHtml = `<div class="msg-options"><button class="msg-opt-btn" onclick="prepareReply('${msg.id}', '${msg.user}', '${msg.text || 'صورة'}')">↩ رد</button>`;
+          if (isMyMsg) {
+            optionsHtml += `<button class="msg-opt-btn" onclick="prepareEdit('${msg.id}', '${msg.text || ''}')">✏ تعديل</button>`;
+          }
+          if (isMyMsg || isAdmin) {
+            optionsHtml += `<button class="msg-opt-btn" onclick="deleteMessage('${msg.id}')" style="color:var(--accent-red)">🗑 حذف</button>`;
+          }
+          optionsHtml += `</div>`;
+
+          bubble.innerHTML = `
+            <div class="msg-header">
+              <span class="msg-user">${msg.user}</span>
+              <span class="msg-time">${timeStr}</span>
+            </div>
+            ${replyHtml}
+            ${msg.text ? `<div class="msg-text">${msg.text}${msg.isEdited ? '<span class="edited-badge">(معدلة)</span>' : ''}</div>` : ''}
+            ${msg.image ? `<img src="${msg.image}" class="msg-img">` : ''}
+            ${optionsHtml}
+          `;
+        }
+
+        container.appendChild(bubble);
+      });
+
+      container.scrollTop = container.scrollHeight;
+    });
+
+    // إعداد الرد على رسالة
+    window.prepareReply = function(id, user, text) {
+      replyingTo = { id, user, text };
+      document.getElementById("replyingToText").innerText = `الرد على ${user}: ${text}`;
+      document.getElementById("replyPreviewBar").style.display = "flex";
+      document.getElementById("messageInput").focus();
+    };
+
+    window.cancelReply = function() {
+      replyingTo = null;
+      document.getElementById("replyPreviewBar").style.display = "none";
+    };
+
+    // التمرير للرسالة الأصلية عند الضغط على الرد الذهبي
+    window.scrollToMessage = function(id) {
+      const target = document.getElementById(`msg_${id}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.borderColor = var(--gold);
+        setTimeout(() => target.style.borderColor = '', 1500);
+      }
+    };
+
+    // تعديل الرسالة
+    window.prepareEdit = function(id, currentText) {
+      editingMsgId = id;
+      document.getElementById("messageInput").value = currentText;
+      document.getElementById("messageInput").focus();
+    };
+
+    // حذف الرسالة (تحويلها إلى "تم حذف الرسالة")
+    window.deleteMessage = async function(id) {
+      if (confirm("هل تريد حذف هذه الرسالة؟")) {
+        try {
+          await updateDoc(doc(db, "chatMessages", id), {
+            isDeleted: true,
+            text: "",
+            image: ""
+          });
+        } catch (e) {
+          alert("فشل الحذف");
+        }
+      }
+    };
+  </script>
+</body>
+</html>
